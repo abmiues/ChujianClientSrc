@@ -1,0 +1,133 @@
+<?xml version="1.0" encoding="utf-8"?>
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    >
+    <LinearLayout
+        android:layout_marginTop="3dp"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:orientation="vertical">
+        <LinearLayout
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:background="#ffffff"
+            android:paddingLeft="10dp"
+            android:paddingRight="10dp"
+            android:orientation="horizontal"> <!--分类搜索-->
+            <TextView
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:background="@drawable/ic_press"
+                android:clickable="true"
+                android:focusable="true"
+                android:drawableTop="@mipmap/zhushi"
+                android:text="主食"
+                android:layout_weight="1"
+                android:gravity="center_horizontal"
+                android:textSize="14sp"
+                android:id="@+id/text_type1" />
+            <TextView
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:drawableTop="@mipmap/tiandian"
+                android:background="@drawable/ic_press"
+                android:clickable="true"
+                android:focusable="true"
+                android:text="甜点"
+                android:layout_weight="1"
+                android:gravity="center_horizontal"
+                android:textSize="14sp"
+                android:id="@+id/text_type2" />
+            <TextView
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:drawableTop="@mipmap/xiawucha"
+                android:background="@drawable/ic_press"
+                android:clickable="true"
+                android:focusable="true"
+                android:text="下午茶"
+                android:layout_weight="1"
+                android:gravity="center_horizontal"
+                android:textSize="14sp"
+                android:id="@+id/text_type3" />
+            <TextView
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:drawableTop="@mipmap/chaoshi"
+                android:background="@drawable/ic_press"
+                android:clickable="true"
+                android:focusable="true"
+                android:text="超市"
+                android:layout_weight="1"
+                android:gravity="center_horizontal"
+                android:textSize="14sp"
+                android:id="@+id/text_type4" />
+        </LinearLayout>
+        <LinearLayout
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:background="#ffffff"
+            android:paddingLeft="10dp"
+            android:paddingRight="10dp"
+            android:orientation="horizontal"> <!--分类搜索-->
+            <TextView
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:drawableTop="@mipmap/shenxian"
+                android:background="@drawable/ic_press"
+                android:clickable="true"
+                android:focusable="true"
+                android:text="生鲜"
+                android:layout_weight="1"
+                android:gravity="center_horizontal"
+                android:textSize="14sp"
+                android:id="@+id/text_type5" />
+            <TextView
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:drawableTop="@mipmap/rihailiaoli"
+                android:background="@drawable/ic_press"
+                android:clickable="true"
+                android:focusable="true"
+                android:text="日韩料理"
+                android:layout_weight="1"
+                android:gravity="center_horizontal"
+                android:textSize="14sp"
+                android:id="@+id/text_type6" />
+
+            <TextView
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:drawableTop="@mipmap/huoguo"
+                android:background="@drawable/ic_press"
+                android:clickable="true"
+                android:focusable="true"
+                android:text="火锅"
+                android:layout_weight="1"
+                android:gravity="center_horizontal"
+                android:textSize="14sp"
+                android:id="@+id/text_type7" />
+
+            <TextView
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:drawableTop="@mipmap/malatang"
+                android:background="@drawable/ic_press"
+                android:clickable="true"
+                android:focusable="true"
+                android:text="麻辣烫"
+                android:layout_weight="1"
+                android:gravity="center_horizontal"
+                android:textSize="14sp"
+                android:id="@+id/text_type8" />
+        </LinearLayout>
+        <TextView
+            android:layout_marginTop="5dp"
+            android:layout_width="match_parent"
+            android:gravity="center"
+            android:layout_height="wrap_content"
+            android:layout_marginBottom="5dp"
+            android:text="推荐店铺"/>
+    </LinearLayout>
+</LinearLayout>

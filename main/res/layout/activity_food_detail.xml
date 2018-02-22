@@ -1,0 +1,195 @@
+<?xml version="1.0" encoding="utf-8"?>
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:id="@+id/activity_food_detail"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    tools:context="com.abmiues.chujian.FoodDetailActivity"
+    android:orientation="vertical">
+    <FrameLayout
+        android:layout_width="match_parent"
+        android:layout_height="45dp"
+        android:background="#00ffffff"
+        android:orientation="horizontal"
+        >
+        <ImageButton
+            android:background="#00ffffff"
+            android:id="@+id/imgbtn_back"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:src="@mipmap/back"
+            android:layout_marginLeft="10dp"
+            android:layout_gravity="left|center_vertical"
+            />
+
+        <ImageButton
+            android:background="#00ffffff"
+            android:id="@+id/imgbtn_more"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:src="@mipmap/more"
+            android:layout_marginRight="10dp"
+            android:layout_gravity="right|center_vertical"
+            />
+        <View  android:layout_height="2px"
+            android:layout_width="match_parent"
+            android:layout_gravity="bottom"
+            android:background="#66CCFF"
+            android:layout_marginTop="3dp"
+            /><!--华丽的分割线-->
+    </FrameLayout>
+    <ScrollView
+        android:layout_width="match_parent"
+        android:layout_height="match_parent"
+        android:layout_marginBottom="40dp">
+
+        <LinearLayout
+            android:id="@+id/contentView"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:orientation="vertical" >
+            <ImageView
+                android:id="@+id/img_title"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:scaleType="centerCrop"
+                android:src="@mipmap/loading"/>
+            <View  android:layout_height="5dp"
+                android:layout_width="match_parent"
+                android:background="#efefef"
+                /><!--华丽的分割线-->
+            <TextView
+                android:id="@+id/text_name"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:layout_marginTop="6dp"
+                android:layout_marginLeft="15dp"
+                android:text="苹果"
+                android:textSize="24sp"/>
+            <TextView
+                android:id="@+id/text_price"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:layout_marginTop="6dp"
+                android:layout_marginLeft="15dp"
+                android:text="¥45"
+                android:textColor="#ff2222"
+                android:textSize="24sp"/>
+
+            <TextView
+                android:id="@+id/text_time"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:layout_marginTop="6dp"
+                android:layout_marginLeft="15dp"
+                android:text="预计配送"
+                android:textSize="24sp"/>
+            <View  android:layout_height="5dp"
+                android:layout_marginTop="6dp"
+                android:layout_width="match_parent"
+                android:background="#efefef"
+                /><!--华丽的分割线-->
+            <FrameLayout
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:id="@+id/layout_history"
+                android:orientation="horizontal">
+                <TextView
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:textSize="24sp"
+                    android:layout_marginTop="6dp"
+                    android:layout_marginLeft="15dp"
+                    android:layout_marginBottom="6dp"
+                    android:text="直播录像"
+                    android:drawableLeft="@mipmap/video_h"
+                    android:drawablePadding="10dp"
+                    android:gravity="center_vertical"
+                    />
+                <ImageView
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:layout_gravity="right|center_vertical"
+                    android:layout_marginRight="15dp"
+                    android:src="@mipmap/cur"/>
+                <View  android:layout_height="5dp"
+                    android:layout_gravity="bottom"
+                    android:layout_width="match_parent"
+                    android:background="#efefef"
+                    /><!--华丽的分割线-->
+            </FrameLayout>
+
+            <TextView
+                android:id="@+id/text_comment"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:layout_marginTop="6dp"
+                android:layout_marginLeft="15dp"
+                android:text="评价"
+                android:textSize="20sp"/><!--星级、评价人数、推荐人数-->
+
+            </LinearLayout>
+    </ScrollView>
+    <RelativeLayout
+        android:layout_width="match_parent"
+        android:layout_height="40dp"
+        android:layout_marginTop="-40dp"
+        android:orientation="horizontal"
+        android:paddingLeft="10dp"
+        android:background="@drawable/bottomboder"
+        android:focusable="true"
+        android:focusableInTouchMode="true"
+        >
+        <TextView
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:textSize="18sp"
+            android:layout_centerVertical="true"
+            android:text="总计¥"
+            android:textColor="#ff2222"
+            android:id="@+id/text_priceall" />
+        <Button
+            android:id="@+id/btn_ok"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_centerVertical="true"
+            android:text="下单"
+            android:textColor="#ffffff"
+            android:background="@color/main_color"
+            android:layout_alignParentRight="true"
+            android:layout_alignParentEnd="true" />
+
+        <ImageButton
+            android:id="@+id/btn_add"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:background="@drawable/bottomboder"
+            android:src="@mipmap/add"
+            android:layout_centerVertical="true"
+            android:layout_toLeftOf="@+id/btn_ok"
+            android:layout_toStartOf="@+id/btn_ok" />
+
+        <EditText
+            android:id="@+id/edit_num"
+            android:layout_width="40dp"
+            android:layout_height="match_parent"
+            android:textSize="18sp"
+            android:textAlignment="center"
+            android:background="@drawable/bottomboder"
+            android:text="0"
+            android:layout_centerVertical="true"
+            android:layout_margin="5dp"
+            android:layout_toLeftOf="@+id/btn_add"
+            android:layout_toStartOf="@+id/btn_add" />
+
+        <ImageButton
+            android:id="@+id/btn_pub"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:background="@drawable/bottomboder"
+            android:src="@mipmap/pub"
+            android:layout_centerVertical="true"
+            android:layout_toLeftOf="@+id/edit_num"
+            android:layout_toStartOf="@+id/edit_num" />
+    </RelativeLayout>
+</LinearLayout>

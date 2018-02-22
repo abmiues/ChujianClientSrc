@@ -1,0 +1,83 @@
+<?xml version="1.0" encoding="utf-8"?>
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    android:orientation="vertical"
+    >
+    <LinearLayout
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:background="@drawable/ic_press"
+        android:paddingLeft="15dp"
+        android:paddingRight="15dp"
+        android:paddingBottom="10dp"
+        android:orientation="vertical">
+
+        <RelativeLayout
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_marginTop="13dp">
+            <TextView
+                android:id="@+id/text_time"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:textColor="#9a9a9a"
+                android:text="2017-02-17 13:05"/>
+            <TextView
+                android:id="@+id/name"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_gravity="right"
+                android:text="匿名用户"
+                android:layout_alignParentTop="true"
+                android:layout_alignParentRight="true"
+                android:layout_alignParentEnd="true" />
+
+            <TextView
+                android:id="@+id/comment"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:paddingLeft="10dp"
+                android:text="评价星级"
+                android:layout_alignParentTop="true"
+                android:layout_toRightOf="@+id/text_time"
+                android:layout_toEndOf="@+id/text_time" /><!--图片星级+文字-->
+        </RelativeLayout>
+         <View  android:layout_height="1dp"
+           android:layout_width="match_parent"
+           android:background="#66CCFF"
+           android:layout_marginTop="9dp"
+           /><!--华丽的分割线-->
+        <LinearLayout
+            android:layout_marginLeft="10dp"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_weight="1"
+            android:orientation="vertical">
+
+            <TextView
+                android:id="@+id/text_content"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:layout_marginTop="3dp"
+                android:text="评价内容"
+                android:textSize="20sp"
+                /><!-- 暂时以文本框形式，以后需要移除文本框，通过代码动态添加-->
+
+        </LinearLayout>
+    <ImageButton
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:background="#ffffff"
+        android:layout_gravity="bottom"
+        android:layout_marginBottom="5dp"
+        android:visibility="gone"
+        android:src="@mipmap/btn_addfood"/>
+
+
+    </LinearLayout>
+    <View  android:layout_height="5dp"
+        android:layout_width="match_parent"
+        android:background="#F1F1F1"
+        /><!--华丽的分割线-->
+</LinearLayout>

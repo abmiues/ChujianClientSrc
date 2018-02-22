@@ -1,0 +1,160 @@
+<?xml version="1.0" encoding="utf-8"?>
+<RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:id="@+id/activity_pay_for_order"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+android:background="#e9e9e9"
+    tools:context="com.abmiues.chujian.PayForOrderActivity">
+    <FrameLayout
+        android:layout_width="match_parent"
+        android:layout_height="45dp"
+        android:background="#ffffff"
+        android:orientation="horizontal"
+        android:id="@+id/frameLayout2">
+        <ImageButton
+            android:background="#00ffffff"
+            android:id="@+id/imgbtn_back"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:src="@mipmap/back"
+            android:layout_marginLeft="10dp"
+            android:layout_gravity="left|center_vertical"
+            />
+        <TextView
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_gravity="center"
+            android:text="确认订单"
+            android:textSize="24sp"/>
+        <ImageButton
+            android:background="#00ffffff"
+            android:id="@+id/imgbtn_more"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:src="@mipmap/more"
+            android:layout_marginRight="10dp"
+            android:layout_gravity="right|center_vertical"
+            />
+        <View  android:layout_height="2px"
+            android:layout_width="match_parent"
+            android:layout_gravity="bottom"
+            android:background="#66CCFF"
+            android:layout_marginTop="3dp"
+            /><!--华丽的分割线-->
+    </FrameLayout>
+
+    <FrameLayout
+        android:layout_width="match_parent"
+        android:layout_height="50dp"
+        android:layout_marginTop="10dp"
+        android:background="@drawable/bottomboder"
+        android:orientation="vertical"
+        android:layout_below="@+id/frameLayout2"
+        android:layout_alignParentLeft="true"
+        android:layout_alignParentStart="true"
+        android:id="@+id/frameLayout3">
+        <RelativeLayout
+            android:id="@+id/layout_addr"
+            android:layout_width="match_parent"
+            android:layout_height="match_parent"
+            android:background="@drawable/bottomboder"
+            >
+            <TextView
+                android:layout_width="wrap_content"
+                android:layout_height="match_parent"
+                android:gravity="center"
+                android:layout_marginLeft="10dp"
+                android:text="地址:"
+                android:textSize="18sp"
+                android:id="@+id/textView" />
+
+            <TextView
+                android:layout_width="wrap_content"
+                android:gravity="center"
+                android:layout_height="match_parent"
+                android:text="未设置默认地址，请输入地址"
+                android:layout_marginLeft="13dp"
+                android:id="@+id/text_addr"
+                android:textSize="16sp"
+                android:layout_centerVertical="true"
+                android:layout_toRightOf="@+id/textView"
+                android:layout_toEndOf="@+id/textView"
+                android:layout_marginStart="13dp" />
+
+            <Button
+                android:layout_width="50dp"
+                android:layout_height="40dp"
+                android:text="编辑"
+                android:background="@drawable/bottomboder"
+                android:layout_centerVertical="true"
+                android:layout_alignParentRight="true"
+                android:layout_alignParentEnd="true"
+                android:layout_marginRight="10dp"
+                android:id="@+id/btn_editaddr" />
+        </RelativeLayout>
+        <RelativeLayout
+            android:id="@+id/layout_editaddr"
+            android:layout_width="match_parent"
+            android:layout_height="match_parent"
+            android:visibility="gone">
+           <EditText
+               android:layout_width="match_parent"
+               android:layout_height="match_parent"
+               android:layout_toLeftOf="@+id/btn_setaddr"
+               android:layout_toStartOf="@+id/btn_setaddr"
+               android:layout_marginTop="5dp"
+               android:layout_marginBottom="5dp"
+               android:layout_marginLeft="10dp"
+               android:hint="请输入地址"
+               android:id="@+id/edit_addr"
+               android:background="@drawable/bottomboder"
+               />
+            <Button
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:text="确认"
+                android:layout_centerVertical="true"
+                android:layout_alignParentRight="true"
+                android:layout_alignParentEnd="true"
+                android:layout_marginRight="10dp"
+                android:id="@+id/btn_setaddr" />
+        </RelativeLayout>
+
+    </FrameLayout>
+
+    <ScrollView
+        android:layout_width="match_parent"
+        android:layout_height="match_parent"
+        android:layout_below="@+id/frameLayout3"
+        android:layout_centerHorizontal="true"
+        android:background="#e9e9e9"
+        android:layout_above="@+id/view2">
+
+        <LinearLayout
+            android:id="@+id/contentView"
+            android:layout_width="match_parent"
+            android:layout_height="match_parent"
+            android:orientation="vertical" />
+    </ScrollView>
+    <View  android:layout_height="5px"
+        android:layout_width="match_parent"
+        android:layout_gravity="bottom"
+        android:background="#e9e9e9"
+        android:layout_above="@+id/btn_pay"
+        android:id="@+id/view2" />
+    <!--华丽的分割线-->
+    <Button
+        android:id="@+id/btn_pay"
+        android:layout_width="match_parent"
+        android:layout_height="40dp"
+        android:shadowColor="#2222aa"
+        android:background="@color/main_color"
+        android:textColor="#ffffff"
+        android:text="确认支付"
+        android:layout_alignParentBottom="true"
+        android:layout_alignParentLeft="true"
+        android:layout_alignParentStart="true" />
+
+
+</RelativeLayout>
