@@ -201,7 +201,7 @@ public class FoodDetailActivity extends AppCompatActivity {
     }
     public void drawcomment()
     {
-        new HttpRequestUtil("http://" + ip +":"+host+ "/ChujianServer/user/getfoodcomment", "foodid=" + foodid, new HttpSendCallback() {
+        HttpRequestUtil.Send("getfoodcomment","foodid=" + foodid, new HttpSendCallback() {
             @Override
             public void getdata(String data) {
                 try {
@@ -225,7 +225,7 @@ public class FoodDetailActivity extends AppCompatActivity {
                     e.printStackTrace();
                 }
             }
-        },this).execute();
+        });
 
     }
 }

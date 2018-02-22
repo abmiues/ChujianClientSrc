@@ -1,9 +1,9 @@
 package com.abmiues.chujian;
 
 
-import android.content.Context;
-import android.content.SharedPreferences;
 import android.os.AsyncTask;
+
+import com.abmiues.Utils.GlobleValue;
 
 import java.io.BufferedReader;
 import java.io.DataOutputStream;
@@ -21,33 +21,60 @@ import java.net.URL;
  */
 
 public class HttpRequestUtil extends AsyncTask<Void, Void, String>{
-    private HttpSendCallback callback;
-    private  String urlstr;
+    private  HttpSendCallback callback;
+    private String urlstr;
     private String params;
     private  boolean islocal;
-    private Context context;
+
     String result="";
 
-    /**
-     * @param url 网络地址
-     * @param params 参数
-     * @param callback 回调函数
-     * @param context  父容器
-     */
+    private static HttpRequestUtil _instance;
 
-    public HttpRequestUtil (String url, String params, HttpSendCallback callback, Context context)
-    {
-        this.callback=callback;
-        this.urlstr=url;
-        this.params=params;
-        this.islocal=false;
-        this.context=context;
+    public static HttpRequestUtil Instance() {
+        if(_instance==null)
+            _instance=new HttpRequestUtil();
+        return _instance;
     }
-    public HttpRequestUtil(HttpSendCallback callback,boolean islocal)
+
+    /**
+     * 传入方法名，参数，回调方法，访问主服务器地址
+     * @param funcName
+     * @param params
+     * @param callback
+     */
+    public static void Send(String funcName,String params,HttpSendCallback callback)
     {
-        this.callback=callback;
-        this.islocal=islocal;
+        Send(GlobleValue.get_ip(),GlobleValue.get_host(),GlobleValue.get_userFuncHead()+funcName,params,callback);
     }
+
+    /**
+     * 手动传入ip,端口，方法地址访问，用于访问其他服务器。
+     * @param ip
+     * @param host
+     * @param url
+     * @param params
+     * @param callback
+     */
+    public static void Send (String ip,int host,String url, String params, HttpSendCallback callback)
+    {
+        _instance.callback=callback;
+        _instance.urlstr="http://"+ ip+":"+host+"/"+url;
+        _instance.params=params;
+        _instance.islocal=false;
+        _instance.execute();
+    }
+
+    /**
+     * 本地测试方法，不进行网络请求
+     * @param callback
+     * @param islocal
+     */
+    public static void Send(HttpSendCallback callback,boolean islocal)
+    {
+        _instance.callback=callback;
+        _instance.islocal=islocal;
+    }
+
     @Override
     protected String doInBackground(Void... param) {
         URL url= null;
@@ -66,11 +93,11 @@ public class HttpRequestUtil extends AsyncTask<Void, Void, String>{
             httpConn.setRequestProperty("Content-Type", "application/x-www-form-urlencoded");
             httpConn.setRequestProperty("Connection", "Keep-Alive");// 维持长连接
             httpConn.setRequestProperty("Charset", "UTF-8");
-            String sessionid=context.getSharedPreferences("localdata",Context.MODE_PRIVATE).getString("sessionid","");
+            String sessionid=GlobleValue.get_globleData().getString("sessionid","");
             if(!sessionid.equals("")){
                 httpConn.setRequestProperty("cookie", sessionid);
             }
-            //连接,也可以不用明文connect，使用下面的httpConn.getOutputStream()会自动connect
+            //连接,也可以不用connect，使用下面的httpConn.getOutputStream()会自动connect
             httpConn.connect();
             //建立输入流，向指向的URL传入参数
 
@@ -84,8 +111,7 @@ public class HttpRequestUtil extends AsyncTask<Void, Void, String>{
                 String sessionid2 = cookieval.substring(0, cookieval.indexOf(";"));
                 if(!sessionid2.equals(sessionid))
                 {
-                    context.getSharedPreferences("localdata",Context.MODE_PRIVATE).edit().putString("sessionid",sessionid2).commit();
-                    SharedPreferences local =context.getSharedPreferences("localdata",Context.MODE_PRIVATE);
+                    GlobleValue.get_globleData().edit().putString("sessionid",sessionid2).commit();
                     return "010";
                 }
             }

@@ -9,7 +9,6 @@ import android.content.CursorLoader;
 import android.content.DialogInterface;
 import android.content.Intent;
 import android.content.Loader;
-import android.content.SharedPreferences;
 import android.content.pm.PackageManager;
 import android.database.Cursor;
 import android.net.Uri;
@@ -32,6 +31,8 @@ import android.widget.Button;
 import android.widget.EditText;
 import android.widget.TextView;
 
+import com.abmiues.Utils.GlobleValue;
+
 import java.util.ArrayList;
 import java.util.List;
 
@@ -43,25 +44,15 @@ import static com.abmiues.chujian.R.id.login;
  */
 public class LoginActivity extends AppCompatActivity implements LoaderCallbacks<Cursor> {
 
-    /**
-     * Id to identity READ_CONTACTS permission request.
-     */
     private static final int REQUEST_READ_CONTACTS = 0;
-    SharedPreferences localdata;
-    String ip;
-    int host;
-
-
-    /**
-     * Keep track of the login task to ensure we can cancel it if requested.
-     */
-    private HttpRequestUtil httpRequestUtil = null;
+    private Boolean inLogin = null;//登陆中的判断，防止用户频繁点击登录
 
     // UI references.
     private AutoCompleteTextView mEmailView;
     private EditText mPasswordView;
     private View mProgressView;
     private View mLoginFormView;
+    String email;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -70,9 +61,7 @@ public class LoginActivity extends AppCompatActivity implements LoaderCallbacks<
         // Set up the login form.
         mEmailView = (AutoCompleteTextView) findViewById(R.id.email);
         populateAutoComplete();
-        localdata=getSharedPreferences("localdata",Context.MODE_PRIVATE);
-        ip=localdata.getString("ip","10.0.2.2");
-        host=localdata.getInt("host",80);
+
         mPasswordView = (EditText) findViewById(R.id.password);
         mPasswordView.setOnEditorActionListener(new TextView.OnEditorActionListener() {
             @Override
@@ -112,22 +101,21 @@ public class LoginActivity extends AppCompatActivity implements LoaderCallbacks<
                     @Override
                     public void onClick(DialogInterface dialog, int which)
                     {
-                        String a = edittextip.getText().toString().trim();
+                        String ip = edittextip.getText().toString().trim();
                         String b = edittexthost.getText().toString().trim();
                         int m_host=Integer.valueOf(b);
-                        localdata.edit().putString("ip", a).commit();
-                        localdata.edit().putInt("host", m_host).commit();
-                        ip=a;
-                        host=m_host;
-                        //    将输入的用户名和密码打印出来
+                        GlobleValue.get_globleData().edit().putString("ip", ip).commit();
+                        GlobleValue.get_globleData().edit().putInt("host", m_host).commit();
+                        GlobleValue.set_ip(ip);
+                        GlobleValue.set_host(m_host);
                     }
                 });
+
                 builder.setNegativeButton("取消", new DialogInterface.OnClickListener()
                 {
                     @Override
                     public void onClick(DialogInterface dialog, int which)
                     {
-
                     }
                 });
                 builder.show();
@@ -199,7 +187,7 @@ public class LoginActivity extends AppCompatActivity implements LoaderCallbacks<
      * errors are presented and no actual login attempt is made.
      */
     private void attemptLogin() {
-        if (httpRequestUtil != null) {
+        if (inLogin) {
             return;
         }
 
@@ -208,7 +196,7 @@ public class LoginActivity extends AppCompatActivity implements LoaderCallbacks<
         mPasswordView.setError(null);
 
         // Store values at the time of the login attempt.
-        String email = mEmailView.getText().toString();
+        email = mEmailView.getText().toString();
         String password = mPasswordView.getText().toString();
         String params="userid="+email+"&pwd="+password;
         boolean cancel = false;
@@ -236,21 +224,23 @@ public class LoginActivity extends AppCompatActivity implements LoaderCallbacks<
             focusView.requestFocus();
         } else {
             showProgress(true);
-            httpRequestUtil = new HttpRequestUtil("http://"+ip+":"+host+"/ChujianServer/user/login", params, new HttpSendCallback() {
+            inLogin=true;
+            HttpRequestUtil.Send("login",params,new HttpSendCallback() {
                 @Override
                 public void getdata(String data) {
-                    httpRequestUtil = null;
                     showProgress(false);
                     if (data.equals("111")) {
                         startActivity(new Intent(LoginActivity.this,MainActivity.class));
                         LoginActivity.this.finish();
+                        GlobleValue.get_globleData().edit().putString("userid",email);
+                        GlobleValue.set_userid(email);
                     } else {
                         mPasswordView.setError(getString(R.string.error_incorrect_password));
                         mPasswordView.requestFocus();
                     }
+                    inLogin=false;
                 }
-            },getApplicationContext());
-            httpRequestUtil.execute();
+            });
         }
     }
 

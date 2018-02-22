@@ -41,7 +41,7 @@
     <uses-permission android:name="android.permission.READ_CONTACTS" />
     <uses-permission android:name="android.permission.READ_CALL_LOG" />
 
-    <!--<activity android:name=".WebUi" />-->
+    <!-- <activity android:name=".WebUi" /> -->
     <application
         android:allowBackup="true"
         android:icon="@mipmap/logo"
@@ -62,7 +62,6 @@
             android:name=".LoginActivity"
             android:label="@string/title_activity_login"
             android:windowSoftInputMode="adjustPan" />
-
         <activity android:name=".SellerDetailActivity" />
         <activity android:name=".FoodDetailActivity" />
         <activity android:name=".SearchSellerActivity" />
@@ -71,12 +70,16 @@
         <activity android:name=".OrderDetailActivity" />
         <activity android:name=".RegisterActivity" />
         <activity android:name=".SetPwdActivity" />
-        <activity android:name=".CommentActivity"></activity>
+        <activity android:name=".CommentActivity" />
         <activity
             android:name=".WebUi"
             android:screenOrientation="portrait"
-            android:theme="@style/FullScreen">
-        </activity>
+            android:theme="@style/FullScreen"></activity>
+
+        <service
+            android:name="com.abmiues.push.PushReciver"
+            android:enabled="true"
+            android:exported="true"></service>
     </application>
 
 </manifest>

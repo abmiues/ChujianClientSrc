@@ -7,6 +7,8 @@ import android.os.Bundle;
 import android.os.Handler;
 import android.support.v7.app.AppCompatActivity;
 
+import com.abmiues.Utils.GlobleValue;
+
 public class FirstActivity extends AppCompatActivity {
     String code="";
     SharedPreferences localdata;
@@ -33,13 +35,17 @@ public class FirstActivity extends AppCompatActivity {
             localdata.edit().putInt("host",host).commit();
         }
 
+        //保存全局变量
+        GlobleValue.set_globleData(localdata);
+        GlobleValue.set_ip(ip);
+        GlobleValue.set_host(host);
+        GlobleValue.set_userFuncHead("ChujianServer/user/");//设置用户请求方法头
+        GlobleValue.set_userid(GlobleValue.get_globleData().getString("userid",""));
         Handler x= new Handler();
         x.postDelayed(new Runnable() {
             @Override
             public void run() {
-                String url="http://"+ip+":"+host+"/ChujianServer/user/autologin";
-                //startActivity(new Intent(FirstActivity.this,PlayerActivity.class).putExtra("url","http://open.ys7.com/openlive/ebbb77823054487a837e2908f92bb3ee.m3u8"));
-                new HttpRequestUtil(url, "", new HttpSendCallback() {
+                HttpRequestUtil.Send("autologin","",new HttpSendCallback() {
                     @Override
                     public void getdata(String data) {
                         if(data.equals("111"))
@@ -49,24 +55,12 @@ public class FirstActivity extends AppCompatActivity {
                         }
                         else
                             startActivity(new Intent(FirstActivity.this,LoginActivity.class));
-                            FirstActivity.this.finish();
+                        FirstActivity.this.finish();
                     }
-                },getApplicationContext()).execute();
+                });
 
             }
         },1000);
-        /*ezaccessToken = EZOpenSDK.getInstance().getEZAccessToken();
-        if(ezaccessToken!=null) {
-            String accessToken = ezaccessToken.getAccessToken();
-            if (accessToken!=null && !accessToken.equals(""))
-            {
-                Toast.makeText(getApplicationContext(),"获取成功",Toast.LENGTH_SHORT).show();
-                getCamera();
-            }
-            else
-                Toast.makeText(getApplicationContext(),"注册成功",Toast.LENGTH_SHORT).show();
-                registerKey();
-        }*/
     }
 
 
