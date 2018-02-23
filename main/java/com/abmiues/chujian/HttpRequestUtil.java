@@ -20,22 +20,8 @@ import java.net.URL;
  * 网络访问类，初始化传入地址，参数，回调函数
  */
 
-public class HttpRequestUtil extends AsyncTask<Void, Void, String>{
-    private  HttpSendCallback callback;
-    private String urlstr;
-    private String params;
-    private  boolean islocal;
-
-    String result="";
-
-    private static HttpRequestUtil _instance;
-
-    public static HttpRequestUtil Instance() {
-        if(_instance==null)
-            _instance=new HttpRequestUtil();
-        return _instance;
-    }
-
+public class HttpRequestUtil
+{
     /**
      * 传入方法名，参数，回调方法，访问主服务器地址
      * @param funcName
@@ -57,11 +43,8 @@ public class HttpRequestUtil extends AsyncTask<Void, Void, String>{
      */
     public static void Send (String ip,int host,String url, String params, HttpSendCallback callback)
     {
-        _instance.callback=callback;
-        _instance.urlstr="http://"+ ip+":"+host+"/"+url;
-        _instance.params=params;
-        _instance.islocal=false;
-        _instance.execute();
+        String urlstr="http://"+ ip+":"+host+"/"+url;
+        new MyAsyncTask(urlstr,params,callback).execute();
     }
 
     /**
@@ -69,12 +52,31 @@ public class HttpRequestUtil extends AsyncTask<Void, Void, String>{
      * @param callback
      * @param islocal
      */
-    public static void Send(HttpSendCallback callback,boolean islocal)
+    public static void Send(HttpSendCallback callback)
     {
-        _instance.callback=callback;
-        _instance.islocal=islocal;
+        new MyAsyncTask(callback).execute();
     }
 
+}
+
+class MyAsyncTask extends AsyncTask<Void, Void, String>{
+    private  HttpSendCallback callback;
+    private String urlstr;
+    private String params;
+    private  boolean islocal;
+    private String result="";
+    public  MyAsyncTask (String urlstr, String params, HttpSendCallback callback)
+    {
+        this.callback=callback;
+        this.urlstr=urlstr;
+        this.params=params;
+        this.islocal=false;
+    }
+    public MyAsyncTask(HttpSendCallback callback)
+    {
+        this.callback=callback;
+        this.islocal=true;
+    }
     @Override
     protected String doInBackground(Void... param) {
         URL url= null;
@@ -143,3 +145,6 @@ public class HttpRequestUtil extends AsyncTask<Void, Void, String>{
         callback.getdata(result);
     }
 }
+
+
+

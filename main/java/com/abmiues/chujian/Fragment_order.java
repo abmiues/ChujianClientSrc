@@ -3,7 +3,6 @@ package com.abmiues.chujian;
 import android.app.Fragment;
 import android.content.Context;
 import android.content.Intent;
-import android.content.SharedPreferences;
 import android.os.Bundle;
 import android.view.LayoutInflater;
 import android.view.View;
@@ -15,31 +14,21 @@ import android.widget.LinearLayout;
 import android.widget.TextView;
 import android.widget.Toast;
 
+import com.abmiues.Utils.GlobleValue;
+
 import org.json.JSONArray;
 import org.json.JSONException;
 import org.json.JSONObject;
-
-import static com.abmiues.chujian.R.id.btn_add;
-import static com.abmiues.chujian.R.id.contentView;
-import static com.abmiues.chujian.R.id.text_comment;
-import static com.abmiues.chujian.R.id.text_priceall;
-import static com.abmiues.chujian.R.id.text_toast;
 
 /**
  * Created by Administrator on 2017/2/20.
  */
 
 public class Fragment_order extends Fragment{
-    String ip;
-    SharedPreferences localdata;
     LinearLayout contentView;
-    int host;
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState) {
         View view=inflater.inflate(R.layout.fragment_order,container,false);
-        localdata=getActivity().getSharedPreferences("localdata",Context.MODE_PRIVATE);
-        ip=localdata.getString("ip","10.0.2.2");
-        host=localdata.getInt("host",80);
         contentView= (LinearLayout) view.findViewById(R.id.contentView);
         ImageButton btn_refresh= (ImageButton) view.findViewById(R.id.btn_refresh);
         btn_refresh.setOnClickListener(new View.OnClickListener() {
@@ -54,7 +43,7 @@ public class Fragment_order extends Fragment{
     public void createOrderlist()
     {
         contentView.removeAllViews();
-        new HttpRequestUtil("http://"+ip+":"+host+"/ChujianServer/user/getorderlist","",new HttpSendCallback() {
+        HttpRequestUtil.Send("getorderlist","",new HttpSendCallback() {
             @Override
             public void getdata(final String data) {
                 if(data.equals(""))
@@ -88,7 +77,7 @@ public class Fragment_order extends Fragment{
                             Button btn_action=(Button) view.findViewById(R.id.btn_action);//评价
                             text_name.setText(sellername);
                             text_time.setText(arr[0]);
-                            GetImgByUrl.setUrlImg(img,"http://"+ip+"/ChujianServer/images/"+sellerid+"/icon.png",false,0.6);
+                            GetImgByUrl.setUrlImg(img,"http://"+ GlobleValue.get_ip()+"/ChujianServer/images/"+sellerid+"/icon.png",false,0.6);
                             text_price.setText("¥"+price);
                             view.setOnClickListener(new View.OnClickListener() {
                                 @Override
@@ -105,7 +94,7 @@ public class Fragment_order extends Fragment{
                             btn_intoshop.setOnClickListener(new View.OnClickListener() {
                                 @Override
                                 public void onClick(View view) {
-                                    new HttpRequestUtil("http://"+ip+":"+host+"/ChujianServer/user/getsellerbyid","sellerid="+sellerid,new HttpSendCallback() {
+                                    HttpRequestUtil.Send("getsellerbyid","sellerid="+sellerid,new HttpSendCallback() {
                                         @Override
                                         public void getdata(String data) {
                                             if(data.equals(""))
@@ -115,10 +104,10 @@ public class Fragment_order extends Fragment{
                                                 startActivity(new Intent(getActivity(),SellerDetailActivity.class).putExtra("sellerinfo",data));
                                             }
                                         }
-                                    },getActivity()).execute();
+                                    });
                                 }
                             });
-                            new HttpRequestUtil("http://"+ip+":"+host+"/ChujianServer/user/getorderdetail","orderid="+orderid,new HttpSendCallback() {
+                            HttpRequestUtil.Send("getorderdetail","orderid="+orderid,new HttpSendCallback() {
                                 @Override
                                 public void getdata(String data) {
                                     if(data.equals(""))
@@ -131,7 +120,7 @@ public class Fragment_order extends Fragment{
                                             JSONObject jsonObject=jsonArray.getJSONObject(1);
                                             String foodname=jsonObject.getString("foodname");
                                             int foodid=jsonObject.getInt("foodid");
-                                            GetImgByUrl.setUrlImg(img_food,"http://"+ip+"/ChujianServer/images/"+sellerid+"/"+foodid+".png");
+                                            GetImgByUrl.setUrlImg(img_food,"http://"+GlobleValue.get_ip()+"/ChujianServer/images/"+sellerid+"/"+foodid+".png");
                                             if(count>1)
                                                 text_foodname.setText(foodname+"等"+count+"样");
                                             else
@@ -142,7 +131,7 @@ public class Fragment_order extends Fragment{
 
                                     }
                                 }
-                            },getActivity()).execute();
+                            });
                             contentView.addView(view);
                         }
                     } catch (JSONException e) {
@@ -151,6 +140,6 @@ public class Fragment_order extends Fragment{
 
                 }
             }
-        },getActivity()).execute();
+        });
     }
 }

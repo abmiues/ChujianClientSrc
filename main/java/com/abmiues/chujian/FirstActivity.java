@@ -19,6 +19,7 @@ public class FirstActivity extends AppCompatActivity {
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_first);
+
         localdata=getSharedPreferences("localdata", Context.MODE_PRIVATE);
         if(localdata.getString("ip",null)!=null)
         {
@@ -41,6 +42,7 @@ public class FirstActivity extends AppCompatActivity {
         GlobleValue.set_host(host);
         GlobleValue.set_userFuncHead("ChujianServer/user/");//设置用户请求方法头
         GlobleValue.set_userid(GlobleValue.get_globleData().getString("userid",""));
+
         Handler x= new Handler();
         x.postDelayed(new Runnable() {
             @Override

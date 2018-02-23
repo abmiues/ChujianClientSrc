@@ -45,7 +45,7 @@ import static com.abmiues.chujian.R.id.login;
 public class LoginActivity extends AppCompatActivity implements LoaderCallbacks<Cursor> {
 
     private static final int REQUEST_READ_CONTACTS = 0;
-    private Boolean inLogin = null;//登陆中的判断，防止用户频繁点击登录
+    private Boolean inLogin = false;//登陆中的判断，防止用户频繁点击登录
 
     // UI references.
     private AutoCompleteTextView mEmailView;
@@ -232,7 +232,7 @@ public class LoginActivity extends AppCompatActivity implements LoaderCallbacks<
                     if (data.equals("111")) {
                         startActivity(new Intent(LoginActivity.this,MainActivity.class));
                         LoginActivity.this.finish();
-                        GlobleValue.get_globleData().edit().putString("userid",email);
+                        GlobleValue.get_globleData().edit().putString("userid",email).commit();
                         GlobleValue.set_userid(email);
                     } else {
                         mPasswordView.setError(getString(R.string.error_incorrect_password));

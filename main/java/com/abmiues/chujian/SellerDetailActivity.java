@@ -2,7 +2,6 @@ package com.abmiues.chujian;
 
 import android.content.Context;
 import android.content.Intent;
-import android.content.SharedPreferences;
 import android.os.Bundle;
 import android.support.v7.app.AppCompatActivity;
 import android.view.LayoutInflater;
@@ -13,6 +12,8 @@ import android.widget.ImageView;
 import android.widget.LinearLayout;
 import android.widget.TextView;
 import android.widget.Toast;
+
+import com.abmiues.Utils.GlobleValue;
 
 import org.json.JSONArray;
 import org.json.JSONException;
@@ -29,8 +30,6 @@ import static com.abmiues.chujian.R.id.sellername;
 public class SellerDetailActivity extends AppCompatActivity {
     LinearLayout contentView;
     String sellerid;
-    SharedPreferences localdata;
-    String ip;
     String cardata;
     JSONObject carItems;
     TextView text_priceall;
@@ -39,7 +38,6 @@ public class SellerDetailActivity extends AppCompatActivity {
     String menudata="";
     String commentdata="";
     TextView text_nonedata;
-    int host;
 
     @Override
     protected void onActivityResult(int requestCode, int resultCode, Intent data) {
@@ -52,9 +50,6 @@ public class SellerDetailActivity extends AppCompatActivity {
         priceall=0;
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_seller_detail);
-        localdata=getSharedPreferences("localdata",Context.MODE_PRIVATE);
-        ip=localdata.getString("ip","10.0.2.2");
-        host=localdata.getInt("host",80);
         contentView= (LinearLayout) findViewById(R.id.contentView);
         text_nonedata= (TextView) findViewById(R.id.nonedata);
         final String sellerinfo=getIntent().getStringExtra("sellerinfo");
@@ -67,14 +62,14 @@ public class SellerDetailActivity extends AppCompatActivity {
         text_priceall= (TextView) findViewById(R.id.text_priceall);
         TextView text_comment= (TextView) findViewById(R.id.text_comment);
         ImageView img_title= (ImageView) findViewById(R.id.img_title);//商家标题图片
-        cardata=localdata.getString("cardata","");
+        cardata= GlobleValue.get_globleData().getString("cardata","");
         JSONObject jsonObject= null;
         try {
             jsonObject = new JSONObject(sellerinfo);
             sellerid= (String) jsonObject.get("sellerid");
 
             text_comment.setText("总评分："+(Integer)jsonObject.get("comment"));
-            GetImgByUrl.setUrlImg(img_title,"http://"+ip+"/ChujianServer/images/"+sellerid+"/icon.png",true,0.6);
+            GetImgByUrl.setUrlImg(img_title,"http://"+GlobleValue.get_ip()+"/ChujianServer/images/"+sellerid+"/icon.png",true,0.6);
         } catch (JSONException e) {
             e.printStackTrace();
         }
@@ -183,7 +178,7 @@ public class SellerDetailActivity extends AppCompatActivity {
             TextView text_addr=(TextView)view.findViewById(R.id.text_addr);
             text_tel.setText("联系方式："+(String) jsonObject.get("tel"));
             text_name.setText((String)jsonObject.get("name"));
-            GetImgByUrl.setUrlImg(img,"http://"+ip+"/ChujianServer/images/"+jsonObject.get("sellerid")+"/icon.png",0.8);
+            GetImgByUrl.setUrlImg(img,"http://"+GlobleValue.get_ip()+"/ChujianServer/images/"+jsonObject.get("sellerid")+"/icon.png",0.8);
             text_menu.setText("湘菜");
 
         } catch (JSONException e) {
@@ -194,7 +189,7 @@ public class SellerDetailActivity extends AppCompatActivity {
     public void caculprice()
     {
         priceall=0;
-        cardata=localdata.getString("cardata","");
+        cardata=GlobleValue.get_globleData().getString("cardata","");
         try {
             if(cardata.equals(""))
                 carbyseller=new JSONObject();
@@ -224,13 +219,13 @@ public class SellerDetailActivity extends AppCompatActivity {
     }
     public void getmenudata()
     {
-        new HttpRequestUtil("http://"+ip+":"+host+"/ChujianServer/user/getmenu","sellerid="+sellerid,new HttpSendCallback() {
+        HttpRequestUtil.Send("getmenu","sellerid="+sellerid,new HttpSendCallback() {
             @Override
             public void getdata(String data) {
                 menudata=data;
                 createMenu();
             }
-        },this).execute();
+        });
     }
     public void createMenu()
     {
@@ -267,7 +262,7 @@ public class SellerDetailActivity extends AppCompatActivity {
                     TextView text_comment= (TextView) view.findViewById(R.id.text_comment);//评价
                     final TextView text_price= (TextView) view.findViewById(R.id.text_price);//价格
                     text_name.setText(name);
-                    GetImgByUrl.setUrlImg(img,"http://"+ip+"/ChujianServer/images/"+sellerid+"/"+foodid+".png");
+                    GetImgByUrl.setUrlImg(img,"http://"+GlobleValue.get_ip()+"/ChujianServer/images/"+sellerid+"/"+foodid+".png");
                     text_comment.setText("评分"+(Integer)jsonObject.get("comment"));
                     text_price.setText("¥"+price);
                     text_toast.setText(des);
@@ -295,7 +290,7 @@ public class SellerDetailActivity extends AppCompatActivity {
                                 }
                                 carItems.put(String.valueOf(foodid),cariteminfo);
                                 carbyseller.put(String.valueOf(sellerid),carItems);
-                                localdata.edit().putString("cardata",carbyseller.toString()).commit();
+                                GlobleValue.get_globleData().edit().putString("cardata",carbyseller.toString()).commit();
                                 priceall+=cariteminfo.getDouble("price");
                                 text_priceall.setText("¥"+priceall);
                             } catch (JSONException e) {
@@ -323,12 +318,12 @@ public class SellerDetailActivity extends AppCompatActivity {
 
     public void getcommentdata()
     {
-        new HttpRequestUtil("http://" + ip +":"+host+ "/ChujianServer/user/getsellercomment", "sellerid=" + sellerid, new HttpSendCallback() {
+         HttpRequestUtil.Send("getsellercomment", "sellerid=" + sellerid, new HttpSendCallback() {
             @Override
             public void getdata(String data) {
                 commentdata=data;
             }
-        },this).execute();
+        });
 
     }
 }

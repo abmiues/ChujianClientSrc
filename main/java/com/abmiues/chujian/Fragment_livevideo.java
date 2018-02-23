@@ -3,7 +3,6 @@ package com.abmiues.chujian;
 import android.app.Fragment;
 import android.content.Context;
 import android.content.Intent;
-import android.content.SharedPreferences;
 import android.os.Bundle;
 import android.view.LayoutInflater;
 import android.view.View;
@@ -15,6 +14,8 @@ import android.widget.LinearLayout;
 import android.widget.TextView;
 import android.widget.Toast;
 
+import com.abmiues.Utils.GlobleValue;
+
 import org.json.JSONArray;
 import org.json.JSONException;
 import org.json.JSONObject;
@@ -25,19 +26,13 @@ import org.json.JSONObject;
 
 public class Fragment_livevideo extends Fragment{
     LinearLayout contentView;
-    SharedPreferences localdata;
-    String ip;
     String searchstr="";
     EditText editsearch;
-    int host;
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState) {
         View view=inflater.inflate(R.layout.fragment_livevideo,container,false);
         contentView= (LinearLayout) view.findViewById(R.id.contentView);
-        localdata=getActivity().getSharedPreferences("localdata",Context.MODE_PRIVATE);
-        ip=localdata.getString("ip","10.0.2.2");
         editsearch= (EditText) view.findViewById(R.id.editText);
-        host=localdata.getInt("host",80);
         ImageButton btnsearch= (ImageButton) view.findViewById(R.id.btn_search);
         btnsearch.setOnClickListener(new View.OnClickListener() {
             @Override
@@ -46,7 +41,7 @@ public class Fragment_livevideo extends Fragment{
                 if(searchstr.equals(""))
                     Toast.makeText(getActivity(),"请输入要查找的商家名称",Toast.LENGTH_LONG).show();
                 else
-                    new HttpRequestUtil("http://"+ip+":"+host+"/ChujianServer/user/searchcamera", "name="+searchstr, new HttpSendCallback() {
+                    HttpRequestUtil.Send("searchcamera", "name="+searchstr, new HttpSendCallback() {
                         @Override
                         public void getdata(String data) {
                             if(data.equals(""))
@@ -58,14 +53,14 @@ public class Fragment_livevideo extends Fragment{
                                 startActivity(new Intent(getActivity(), SearchCameraActivity.class).putExtra("data",data));
                             }
                         }
-                    },getActivity()).execute();
+                    });
             }
         });
         drawVideo();
         return view;
     }
     public void drawVideo() {
-        new HttpRequestUtil("http://" + ip +":"+host+ "/ChujianServer/user/getcamera","", new HttpSendCallback() {
+        HttpRequestUtil.Send("getcamera","", new HttpSendCallback() {
             @Override
             public void getdata(String data) {
                 if (data.equals(""))
@@ -85,8 +80,8 @@ public class Fragment_livevideo extends Fragment{
                             final String name=jsonObject.getString("name");
                             text_name.setText(name);
                             final String url=jsonObject.getString("address");
-                            GetImgByUrl.setUrlImg(img, "http://" + ip + "/ChujianServer/images/" + jsonObject.getString("sellerid") + "/camera"+jsonObject.getString("cameraid")+".png",true,0.8);
-                            GetImgByUrl.setUrlImg(img_seller, "http://" + ip + "/ChujianServer/images/" + jsonObject.getString("sellerid") + "/icon.png");
+                            GetImgByUrl.setUrlImg(img, "http://" + GlobleValue.get_ip() + "/ChujianServer/images/" + jsonObject.getString("sellerid") + "/camera"+jsonObject.getString("cameraid")+".png",true,0.8);
+                            GetImgByUrl.setUrlImg(img_seller, "http://" + GlobleValue.get_ip() + "/ChujianServer/images/" + jsonObject.getString("sellerid") + "/icon.png");
                             text_num.setText("0");
                             view.setOnClickListener(new View.OnClickListener() {
                                 @Override
@@ -103,7 +98,7 @@ public class Fragment_livevideo extends Fragment{
 
                 }
             }
-        }, getActivity()).execute();
+        });
 
     }
 }

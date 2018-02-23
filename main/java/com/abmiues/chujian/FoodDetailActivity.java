@@ -2,7 +2,6 @@ package com.abmiues.chujian;
 
 import android.content.Context;
 import android.content.Intent;
-import android.content.SharedPreferences;
 import android.os.Bundle;
 import android.support.v7.app.AppCompatActivity;
 import android.text.InputType;
@@ -15,6 +14,9 @@ import android.widget.ImageView;
 import android.widget.LinearLayout;
 import android.widget.TextView;
 import android.widget.Toast;
+
+import com.abmiues.Utils.GlobleValue;
+
 import org.json.JSONArray;
 import org.json.JSONException;
 import org.json.JSONObject;
@@ -25,8 +27,7 @@ import static com.abmiues.chujian.R.id.comment;
 
 public class FoodDetailActivity extends AppCompatActivity {
     LinearLayout contentView;
-    SharedPreferences localdata;
-    String ip;
+
     int foodid;
     String sellerid;
     String cardata;
@@ -39,7 +40,6 @@ public class FoodDetailActivity extends AppCompatActivity {
     String name;
     boolean iseditable;
     String videourl;
-    int host;
     @Override
     protected void onActivityResult(int requestCode, int resultCode, Intent data) {
         super.onActivityResult(requestCode, resultCode, data);
@@ -49,8 +49,6 @@ public class FoodDetailActivity extends AppCompatActivity {
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_food_detail);
-        localdata=getSharedPreferences("localdata",Context.MODE_PRIVATE);
-        ip=localdata.getString("ip","10.0.2.2");
         text_price= (TextView) findViewById(R.id.text_priceall);
         ImageButton imgbtn_back= (ImageButton) findViewById(R.id.imgbtn_back);
         ImageButton btn_add= (ImageButton) findViewById(R.id.btn_add);
@@ -91,7 +89,7 @@ public class FoodDetailActivity extends AppCompatActivity {
             @Override
             public void onClick(View view) {
                 changenum(0,true);//更新数据
-                String cardata=localdata.getString("cardata","");
+                String cardata= GlobleValue.get_globleData().getString("cardata","");
                 if(priceall>0)
                     startActivityForResult(new Intent(FoodDetailActivity.this,PayForOrderActivity.class),0);
                 else
@@ -101,7 +99,7 @@ public class FoodDetailActivity extends AppCompatActivity {
         });
         edit_num.setInputType(InputType.TYPE_CLASS_NUMBER);
 
-        cardata=localdata.getString("cardata","");
+        cardata=GlobleValue.get_globleData().getString("cardata","");
         contentView= (LinearLayout) findViewById(R.id.contentView);
         String jsonstr=getIntent().getExtras().getString("data");
         drawinfo(jsonstr);
@@ -113,7 +111,7 @@ public class FoodDetailActivity extends AppCompatActivity {
     {
         priceall=0;
         edit_num.setText("0");
-        cardata=localdata.getString("cardata","");
+        cardata=GlobleValue.get_globleData().getString("cardata","");
         try {
             if(cardata.equals(""))
                 carbyseller=new JSONObject();
@@ -170,7 +168,7 @@ public class FoodDetailActivity extends AppCompatActivity {
                 edit_num.setText(String.valueOf(num));
             carItems.put(String.valueOf(foodid),cariteminfo);
             carbyseller.put(String.valueOf(sellerid),carItems);
-            localdata.edit().putString("cardata",carbyseller.toString()).commit();
+            GlobleValue.get_globleData().edit().putString("cardata",carbyseller.toString()).commit();
             caculprice();
         } catch (JSONException e) {
             e.printStackTrace();
@@ -191,10 +189,9 @@ public class FoodDetailActivity extends AppCompatActivity {
             ImageView img_title= (ImageView) contentView.findViewById(R.id.img_title);
             TextView text_price= (TextView) contentView.findViewById(R.id.text_price);
             TextView text_name= (TextView) contentView.findViewById(R.id.text_name);
-            GetImgByUrl.setUrlImg(img_title,"http://"+ip+"/ChujianServer/images/"+sellerid+"/"+foodid+".png",true);
+            GetImgByUrl.setUrlImg(img_title,"http://"+GlobleValue.get_ip()+"/ChujianServer/images/"+sellerid+"/"+foodid+".png",true);
             text_price.setText("¥"+price);
             text_name.setText(name);
-            host=localdata.getInt("host",80);
         } catch (JSONException e) {
             e.printStackTrace();
         }

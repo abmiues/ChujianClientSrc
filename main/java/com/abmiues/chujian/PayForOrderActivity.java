@@ -1,10 +1,8 @@
 package com.abmiues.chujian;
 
 import android.content.Context;
-import android.content.Intent;
-import android.content.SharedPreferences;
-import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
+import android.support.v7.app.AppCompatActivity;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.widget.Button;
@@ -16,41 +14,27 @@ import android.widget.RelativeLayout;
 import android.widget.TextView;
 import android.widget.Toast;
 
-import org.json.JSONArray;
+import com.abmiues.Utils.GlobleValue;
+
 import org.json.JSONException;
 import org.json.JSONObject;
 
 import java.util.Iterator;
 
-import static android.R.attr.data;
-import static android.R.attr.trimPathEnd;
-import static com.abmiues.chujian.R.id.btn_add;
-import static com.abmiues.chujian.R.id.contentView;
-import static com.abmiues.chujian.R.id.imgbtn_back;
-import static com.abmiues.chujian.R.id.text_comment;
-import static com.abmiues.chujian.R.id.text_priceall;
-import static com.abmiues.chujian.R.id.text_toast;
-
 public class PayForOrderActivity extends AppCompatActivity {
     LinearLayout contentView;
     String sellerid;
-    SharedPreferences localdata;
-    String ip;
     String cardata;
     JSONObject carItems;
     Button btn_pay;
     double priceall;
     JSONObject carbyseller;
-    int host;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_pay_for_order);
-        localdata=getSharedPreferences("localdata",Context.MODE_PRIVATE);
-        ip=localdata.getString("ip","10.0.2.2");
-        host=localdata.getInt("host",80);
-        cardata=localdata.getString("cardata","");
+        cardata= GlobleValue.get_globleData().getString("cardata","");
         btn_pay= (Button) findViewById(R.id.btn_pay);
         contentView= (LinearLayout) findViewById(R.id.contentView);
         Button btn_setaddr= (Button) findViewById(R.id.btn_setaddr);
@@ -84,18 +68,18 @@ public class PayForOrderActivity extends AppCompatActivity {
         btn_pay.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
-                cardata=localdata.getString("cardata","");
-                new HttpRequestUtil("http://" + ip+":"+host + "/ChujianServer/user/addorder", "data=" + cardata, new HttpSendCallback() {
+                cardata=GlobleValue.get_globleData().getString("cardata","");
+                 HttpRequestUtil.Send("addorder", "data=" + cardata, new HttpSendCallback() {
                     @Override
                     public void getdata(String data) {
                         if (Integer.valueOf(data)>0)
                         {
                             Toast.makeText(PayForOrderActivity.this,"下单成功",Toast.LENGTH_LONG);
                             PayForOrderActivity.this.finish();
-                            localdata.edit().putString("cardata","").commit();
+                            GlobleValue.get_globleData().edit().putString("cardata","").commit();
                         }
                     }
-                },PayForOrderActivity.this).execute();
+                });
 
 
             }
@@ -153,7 +137,7 @@ public class PayForOrderActivity extends AppCompatActivity {
         TextView text_num= (TextView) view.findViewById(R.id.text_num);
         text_name.setText(name);
         text_num.setText(String.valueOf(num));
-        GetImgByUrl.setUrlImg(img,"http://"+ip+"/ChujianServer/images/"+sellerid+"/"+foodid+".png");
+        GetImgByUrl.setUrlImg(img,"http://"+GlobleValue.get_ip()+"/ChujianServer/images/"+sellerid+"/"+foodid+".png");
         text_price.setText("¥"+price);
         contentView.addView(view);
     }

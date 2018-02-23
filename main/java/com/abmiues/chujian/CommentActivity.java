@@ -1,9 +1,8 @@
 package com.abmiues.chujian;
 
 import android.content.Context;
-import android.content.SharedPreferences;
-import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
+import android.support.v7.app.AppCompatActivity;
 import android.text.Editable;
 import android.text.TextWatcher;
 import android.view.LayoutInflater;
@@ -16,6 +15,8 @@ import android.widget.LinearLayout;
 import android.widget.TextView;
 import android.widget.Toast;
 
+import com.abmiues.Utils.GlobleValue;
+
 import org.json.JSONArray;
 import org.json.JSONException;
 import org.json.JSONObject;
@@ -24,18 +25,12 @@ import java.util.HashMap;
 
 public class CommentActivity extends AppCompatActivity {
     LinearLayout contentView;
-    SharedPreferences localdata;
-    String ip;
-    int host;
     HashMap<String ,HashMap> map;
     String sellerid;
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_comment);
-        localdata=getSharedPreferences("localdata", Context.MODE_PRIVATE);
-        ip=localdata.getString("ip","10.0.2.2");
-        host=localdata.getInt("host",80);
         contentView= (LinearLayout)findViewById(R.id.contentView);
 
         ImageButton imgbtn_back= (ImageButton) findViewById(R.id.imgbtn_back);
@@ -54,21 +49,21 @@ public class CommentActivity extends AppCompatActivity {
                     if(key.length()==11)
                     {
                         String param="sellerid="+key+"&content="+datamap.get("content")+"&score="+datamap.get("score");
-                        new HttpRequestUtil("http://"+ip+":"+host+"/ChujianServer/user/addsellercomment",param,new HttpSendCallback() {
+                        HttpRequestUtil.Send("haddsellercomment",param,new HttpSendCallback() {
                             @Override
                             public void getdata(String data) {
                             }
-                        },CommentActivity.this).execute();
+                        });
                     }
                     else
                     {
                         String param="foodid="+key+"&content="+datamap.get("content")+"&score="+datamap.get("score");
-                        new HttpRequestUtil("http://"+ip+":"+host+"/ChujianServer/user/addfoodcomment",param,new HttpSendCallback() {
+                        HttpRequestUtil.Send("addfoodcomment",param,new HttpSendCallback() {
                             @Override
                             public void getdata(String data) {
 
                             }
-                        },CommentActivity.this).execute();
+                        });
                     }
                }
                CommentActivity.this.finish();
@@ -168,9 +163,9 @@ public class CommentActivity extends AppCompatActivity {
             text_name.setText((String)jb.get("sellername"));
             sellerid= (String) jb.get("sellerid");
             map.put((String) jb.get("sellerid"),datamap);
-            GetImgByUrl.setUrlImg(img_seller,"http://"+ip+"/ChujianServer/images/"+jb.get("sellerid")+"/icon.png",0.6);
+            GetImgByUrl.setUrlImg(img_seller,"http://"+ GlobleValue.get_ip()+"/ChujianServer/images/"+jb.get("sellerid")+"/icon.png",0.6);
             contentView.addView(view);
-            new HttpRequestUtil("http://"+ip+":"+host+"/ChujianServer/user/getorderdetail","orderid="+jb.get("orderid"),new HttpSendCallback() {
+            HttpRequestUtil.Send("getorderdetail","orderid="+jb.get("orderid"),new HttpSendCallback() {
                 @Override
                 public void getdata(String data) {
                     if(data.equals(""))
@@ -180,7 +175,7 @@ public class CommentActivity extends AppCompatActivity {
                         addfood(data);
                     }
                 }
-            },CommentActivity.this).execute();
+            });
         } catch (JSONException e) {
             e.printStackTrace();
         }
@@ -282,7 +277,7 @@ public class CommentActivity extends AppCompatActivity {
                         datamap.put("content",addcontent.getText().toString());
                     }
                 });
-                GetImgByUrl.setUrlImg(img_seller,"http://"+ip+"/ChujianServer/images/"+sellerid+"/"+foodid+".png",0.6);
+                GetImgByUrl.setUrlImg(img_seller,"http://"+GlobleValue.get_ip()+"/ChujianServer/images/"+sellerid+"/"+foodid+".png",0.6);
                 contentView.addView(view);
             }
         } catch (JSONException e) {

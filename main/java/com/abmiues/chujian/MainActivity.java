@@ -3,8 +3,8 @@ package com.abmiues.chujian;
 import android.app.Fragment;
 import android.app.FragmentManager;
 import android.app.FragmentTransaction;
-import android.content.Context;
-import android.content.SharedPreferences;
+import android.app.Service;
+import android.content.Intent;
 import android.graphics.drawable.Drawable;
 import android.os.Bundle;
 import android.support.v4.content.ContextCompat;
@@ -12,10 +12,12 @@ import android.support.v7.app.AppCompatActivity;
 import android.view.View;
 import android.widget.TextView;
 
+import com.abmiues.Utils.GlobleValue;
+import com.abmiues.push.PushReciver;
+
 import java.util.HashMap;
 
 public class MainActivity extends AppCompatActivity {
-SharedPreferences localdata;
     TextView textdata;
     Fragment current_fragment;//保存当前正在显示的界面
     Fragment fragment_index;
@@ -35,7 +37,6 @@ SharedPreferences localdata;
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_main);
         textdata=(TextView)findViewById(R.id.textdata);
-        localdata=getSharedPreferences("localdata", Context.MODE_PRIVATE);
          btn_index=(TextView)findViewById(R.id.text_index) ;
          btn_livevideo=(TextView)findViewById(R.id.text_livevideo) ;
          btn_order=(TextView)findViewById(R.id.text_order) ;
@@ -50,6 +51,7 @@ SharedPreferences localdata;
         bottomClick(btn_livevideo);
         bottomClick(btn_order);
         bottomClick(btn_person);
+        bindService(new Intent(MainActivity.this, PushReciver.class), GlobleValue.get_serviceConnection(), Service.BIND_AUTO_CREATE);//绑定PushService
         //textdata.setText(localdata.getString("camera",""));
 
     }
@@ -132,4 +134,13 @@ SharedPreferences localdata;
         drawable.setBounds(0,0,drawable.getMinimumWidth(),drawable.getMinimumHeight());
         textView.setCompoundDrawables(null,drawable,null,null);
     }
+
+
+    @Override
+    protected void onDestroy() {
+        super.onDestroy();
+        unbindService(GlobleValue.get_serviceConnection());
+    }
+
+
 }

@@ -1,9 +1,8 @@
 package com.abmiues.chujian;
 
 import android.content.Context;
-import android.content.SharedPreferences;
-import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
+import android.support.v7.app.AppCompatActivity;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.widget.ImageButton;
@@ -12,30 +11,20 @@ import android.widget.LinearLayout;
 import android.widget.TextView;
 import android.widget.Toast;
 
+import com.abmiues.Utils.GlobleValue;
+
 import org.json.JSONArray;
 import org.json.JSONException;
 import org.json.JSONObject;
 
-import static android.R.attr.data;
-import static com.abmiues.chujian.R.id.contentView;
-import static com.abmiues.chujian.R.id.text_name;
-import static com.abmiues.chujian.R.id.text_price;
-import static com.abmiues.chujian.R.id.text_time;
-
 public class OrderDetailActivity extends AppCompatActivity {
-String ip;
-    SharedPreferences localdata;
     int orderid;
     LinearLayout contentView;
     String sellerid;
-    int host;
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_order_detail);
-        localdata=getSharedPreferences("localdata",Context.MODE_PRIVATE);
-        ip=localdata.getString("ip","10.0.2.2");
-        host=localdata.getInt("host",80);
         ImageView img= (ImageView) findViewById(R.id.img_seller);//商家头像
 
         TextView text_name= (TextView) findViewById(R.id.sellername);//商家名字
@@ -61,7 +50,7 @@ String ip;
                 orderid = jsonObject.getInt("orderid");
                 text_name.setText(sellername);
                 text_time.setText(time);
-                GetImgByUrl.setUrlImg(img,"http://"+ip+"/ChujianServer/images/"+sellerid+"/icon.png");
+                GetImgByUrl.setUrlImg(img,"http://"+ GlobleValue.get_ip()+"/ChujianServer/images/"+sellerid+"/icon.png");
                 text_priceall.setText("¥"+price);
 
         } catch (JSONException e) {
@@ -71,7 +60,7 @@ String ip;
     }
     public void createOrderlist()
     {
-        new HttpRequestUtil("http://"+ip+":"+host+"/ChujianServer/user/getorderdetail","orderid="+orderid,new HttpSendCallback() {
+        HttpRequestUtil.Send("getorderdetail","orderid="+orderid,new HttpSendCallback() {
             @Override
             public void getdata(String data) {
                 if(data.equals(""))
@@ -100,7 +89,7 @@ String ip;
 
                 }
             }
-        },OrderDetailActivity.this).execute();
+        });
     }
     public void createItem(String sellerid,String name,int foodid,int num,double price)
     {
@@ -115,7 +104,7 @@ String ip;
         text_time.setVisibility(View.GONE);
         text_name.setText(name);
         text_num.setText(String.valueOf(num));
-        GetImgByUrl.setUrlImg(img,"http://"+ip+"/ChujianServer/images/"+sellerid+"/"+foodid+".png");
+        GetImgByUrl.setUrlImg(img,"http://"+GlobleValue.get_ip()+"/ChujianServer/images/"+sellerid+"/"+foodid+".png");
         text_price.setText("¥"+price);
         contentView.addView(view);
     }

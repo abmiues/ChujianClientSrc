@@ -2,7 +2,6 @@ package com.abmiues.chujian;
 
 import android.content.Context;
 import android.content.Intent;
-import android.content.SharedPreferences;
 import android.os.Bundle;
 import android.support.v7.app.AppCompatActivity;
 import android.view.LayoutInflater;
@@ -12,20 +11,18 @@ import android.widget.ImageView;
 import android.widget.LinearLayout;
 import android.widget.TextView;
 
+import com.abmiues.Utils.GlobleValue;
+
 import org.json.JSONArray;
 import org.json.JSONException;
 import org.json.JSONObject;
 
 public class SearchCameraActivity extends AppCompatActivity {
     LinearLayout contentView;
-    SharedPreferences localdata;
-    String ip;
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_search_camera);
-        localdata=getSharedPreferences("localdata", Context.MODE_PRIVATE);
-        ip=localdata.getString("ip","10.0.2.2");
         contentView= (LinearLayout)findViewById(R.id.contentView);
         ImageButton imgbtn_back= (ImageButton) findViewById(R.id.imgbtn_back);
         imgbtn_back.setOnClickListener(new View.OnClickListener() {
@@ -49,8 +46,8 @@ public class SearchCameraActivity extends AppCompatActivity {
                 TextView text_num = (TextView) view.findViewById(R.id.text_num);//观看人数
                 text_name.setText(jsonObject.getString("name"));
                 final String url=jsonObject.getString("address");
-                GetImgByUrl.setUrlImg(img_seller, "http://" + ip + "/ChujianServer/images/" + jsonObject.getString("sellerid") + "/icon.png");
-                GetImgByUrl.setUrlImg(img, "http://" + ip + "/ChujianServer/images/" + jsonObject.getString("sellerid") + "/camera.png");
+                GetImgByUrl.setUrlImg(img_seller, "http://" + GlobleValue.get_ip() + "/ChujianServer/images/" + jsonObject.getString("sellerid") + "/icon.png");
+                GetImgByUrl.setUrlImg(img, "http://" + GlobleValue.get_ip() + "/ChujianServer/images/" + jsonObject.getString("sellerid") + "/camera.png");
                 text_num.setText("0");
                 view.setOnClickListener(new View.OnClickListener() {
                     @Override

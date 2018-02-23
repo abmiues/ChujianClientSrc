@@ -3,15 +3,12 @@ package com.abmiues.chujian;
 import android.app.Fragment;
 import android.content.Context;
 import android.content.Intent;
-import android.content.SharedPreferences;
 import android.os.Bundle;
 import android.support.v4.view.PagerAdapter;
 import android.support.v4.view.ViewPager;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
-import android.view.inputmethod.InputMethodManager;
-import android.widget.Button;
 import android.widget.EditText;
 import android.widget.ImageButton;
 import android.widget.ImageView;
@@ -19,6 +16,7 @@ import android.widget.LinearLayout;
 import android.widget.TextView;
 import android.widget.Toast;
 
+import com.abmiues.Utils.GlobleValue;
 import com.abmiues.chujian.abmiues.chujian.layer.Item_scrollad;
 
 import org.json.JSONArray;
@@ -33,22 +31,16 @@ import java.util.ArrayList;
  */
 public class Fragment_index extends Fragment{
     LinearLayout contentView;
-    SharedPreferences localdata;
-    String ip;
     String searchstr="";
     EditText editsearch;
-    int host;
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState) {
         View view=inflater.inflate(R.layout.fragment_index,container,false);
-        localdata=getActivity().getSharedPreferences("localdata",Context.MODE_PRIVATE);
-        ip=localdata.getString("ip","10.0.2.2");
         contentView=(LinearLayout)view.findViewById(R.id.contentView);
         editsearch= (EditText) view.findViewById(R.id.editText);
         contentView.addView(new Item_scrollad(getActivity()));
         contentView.addView(drawType());
         ImageButton btnsearch= (ImageButton) view.findViewById(R.id.btn_search);
-        host=localdata.getInt("host",80);
         btnsearch.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
@@ -56,7 +48,8 @@ public class Fragment_index extends Fragment{
                 if(searchstr.equals(""))
                     Toast.makeText(getActivity(),"请输入要商家名称",Toast.LENGTH_LONG).show();
                 else
-                new HttpRequestUtil("http://"+ip+":"+host+"/ChujianServer/user/searchseller", "name="+searchstr, new HttpSendCallback() {
+
+                    HttpRequestUtil.Send("searchseller","name="+searchstr,new HttpSendCallback() {
                     @Override
                     public void getdata(String data) {
                         if(data.equals(""))
@@ -68,10 +61,10 @@ public class Fragment_index extends Fragment{
                             startActivity(new Intent(getActivity(), SearchSellerActivity.class).putExtra("data",data));
                         }
                     }
-                },getActivity()).execute();
+                });
             }
         });
-        new HttpRequestUtil("http://"+ip+":"+host+"/ChujianServer/user/getseller", "", new HttpSendCallback() {
+         HttpRequestUtil.Send("getseller", "", new HttpSendCallback() {
             @Override
             public void getdata(String data) {
                 if(data.equals(""))
@@ -83,7 +76,7 @@ public class Fragment_index extends Fragment{
                     drawSeller(data);
                 }
             }
-        },getActivity()).execute();
+        });
         return view;
     }
 
@@ -105,7 +98,7 @@ public class Fragment_index extends Fragment{
                 TextView text_comment= (TextView) view.findViewById(R.id.text_comment);//评价
                 TextView text_menu= (TextView) view.findViewById(R.id.text_menu);//菜系
                 text_name.setText((String)jb.get("name"));
-                GetImgByUrl.setUrlImg(img,"http://"+ip+"/ChujianServer/images/"+jb.get("sellerid")+"/icon.png");
+                GetImgByUrl.setUrlImg(img,"http://"+ GlobleValue.get_ip()+"/ChujianServer/images/"+jb.get("sellerid")+"/icon.png");
                 img_video.setImageResource((Integer) jb.get("state")==1? R.mipmap.live_orange:R.mipmap.live_black);
                 text_comment.setText("店铺评分"+(Integer)jb.get("comment"));
                 text_menu.setText("湘菜");
