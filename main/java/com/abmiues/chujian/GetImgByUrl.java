@@ -1,17 +1,13 @@
 package com.abmiues.chujian;
 
-import android.app.ActionBar;
 import android.graphics.Bitmap;
 import android.graphics.BitmapFactory;
-import android.graphics.drawable.Drawable;
 import android.os.Handler;
 import android.os.Message;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.ImageView;
-import android.widget.Toast;
 
-import com.bumptech.glide.load.model.ImageVideoModelLoader;
 
 import java.io.File;
 import java.io.FileNotFoundException;
@@ -20,11 +16,6 @@ import java.io.IOException;
 import java.io.InputStream;
 import java.net.HttpURLConnection;
 import java.net.URL;
-
-import static android.R.attr.bitmap;
-import static android.R.attr.path;
-import static android.R.attr.scaleType;
-
 /**
  * Created by Administrator on 2017/2/21.
  */
