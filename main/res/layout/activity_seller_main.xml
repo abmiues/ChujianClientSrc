@@ -1,0 +1,76 @@
+<?xml version="1.0" encoding="utf-8"?>
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+xmlns:tools="http://schemas.android.com/tools"
+android:id="@+id/activity_seller_main"
+android:layout_width="match_parent"
+android:layout_height="match_parent"
+android:orientation="vertical"
+tools:context="com.abmiues.chujian.seller.SellerMainActivity">
+
+<FrameLayout
+    android:id="@+id/fragment_content"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    android:layout_marginBottom="53dp">
+</FrameLayout>
+
+
+<LinearLayout
+    android:layout_width="match_parent"
+    android:layout_height="55dp"
+    android:layout_marginTop="-53dp"
+    android:background="@drawable/bottomboder"
+    android:gravity="center_vertical"
+    android:orientation="horizontal">
+
+    <TextView
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:drawableTop="@mipmap/index_black"
+        android:drawablePadding="2dp"
+        android:text="我的店铺"
+        android:layout_weight="1"
+        android:gravity="center"
+        android:textSize="12sp"
+        android:id="@+id/text_index" />
+
+    <TextView
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:drawableTop="@mipmap/live_black"
+        android:drawablePadding="2dp"
+        android:text="我的直播"
+        android:layout_weight="1"
+        android:gravity="center_horizontal"
+        android:textSize="12sp"
+        android:id="@+id/text_livevideo" />
+
+    <TextView
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:drawableTop="@mipmap/order_black"
+        android:drawablePadding="2dp"
+        android:text="我的订单"
+        android:layout_weight="1"
+        android:gravity="center_horizontal"
+        android:textSize="12sp"
+        android:id="@+id/text_order" />
+    <TextView
+        android:layout_width="match_parent"
+        android:drawablePadding="2dp"
+        android:layout_height="wrap_content"
+        android:drawableTop="@mipmap/person_black"
+        android:text="小厨账户"
+        android:layout_weight="1"
+        android:gravity="center_horizontal"
+        android:textSize="12sp"
+        android:id="@+id/text_person" />
+</LinearLayout>
+
+<TextView
+    android:id="@+id/textdata"
+    android:layout_gravity="bottom|center_horizontal"
+    android:layout_width="wrap_content"
+    android:layout_height="wrap_content"
+    android:layout_marginTop="-60dp"/>
+</LinearLayout>

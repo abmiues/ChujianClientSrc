@@ -1,4 +1,4 @@
-package com.abmiues.chujian;
+package com.abmiues.chujian.seller;
 
 import android.app.Fragment;
 import android.content.Context;
@@ -15,16 +15,24 @@ import android.widget.TextView;
 import android.widget.Toast;
 
 import com.abmiues.Utils.GlobleValue;
+import com.abmiues.chujian.GetImgByUrl;
+import com.abmiues.chujian.HttpRequestUtil;
+import com.abmiues.chujian.HttpSendCallback;
+import com.abmiues.chujian.R;
+import com.abmiues.chujian.pojo.Order;
+import com.abmiues.chujian.pojo.OrderDetail;
+import com.abmiues.chujian.user.OrderDetailActivity;
 
-import org.json.JSONArray;
-import org.json.JSONException;
-import org.json.JSONObject;
+import net.sf.json.JSONArray;
+import net.sf.json.JSONObject;
+
+import java.util.List;
 
 /**
  * Created by Administrator on 2017/2/20.
  */
 
-public class Fragment_order extends Fragment{
+public class FragmentSellerOrder extends Fragment{
     LinearLayout contentView;
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState) {
@@ -50,21 +58,21 @@ public class Fragment_order extends Fragment{
                     Toast.makeText(getActivity(),"数据为空",Toast.LENGTH_LONG).show();
                 else
                 {
-                    try {
-                        JSONArray jsonArray=new JSONArray(data);
-                        for (int i=0;i<jsonArray.length();i++)
+                        List<Order> orderList= (List<Order>) JSONArray.toCollection(JSONArray.fromObject(data),Order.class);
+                        for (int i=0;i<orderList.size();i++)
                         {
                             LayoutInflater inflater = (LayoutInflater)getActivity().getSystemService( Context.LAYOUT_INFLATER_SERVICE);
                             View view = inflater.inflate(R.layout.item_orderlist, null);
-                            final JSONObject jsonObject=jsonArray.getJSONObject(i);
-                            String time=jsonObject.getString("time");
+                            final Order oneOrder=orderList.get(i);
+                            String time=oneOrder.getTime();
                             String[] arr;
                             arr=time.split(" ");
-                            final String sellerid=jsonObject.getString("sellerid");
-                            double price=jsonObject.getDouble("price");
-                            String remark=jsonObject.getString("remark");
-                            String sellername=jsonObject.getString("sellername");
-                            int orderid=jsonObject.getInt("orderid");
+                            final String sellerid=oneOrder.getSellerid();
+                            double price=oneOrder.getPrice();
+                            String address=oneOrder.getAddress();
+                            String userName=oneOrder.getUsername();
+                            final int orderid=oneOrder.getOrderid();
+                            final int[] state={oneOrder.getState()};
 
                             final ImageView img= (ImageView) view.findViewById(R.id.img_seller);//商家头像
                             final ImageView img_food= (ImageView) view.findViewById(R.id.img_food);//商家头像
@@ -74,24 +82,61 @@ public class Fragment_order extends Fragment{
                             TextView text_remark= (TextView) view.findViewById(R.id.text_remark);//评价
                             TextView text_price= (TextView) view.findViewById(R.id.text_price);//价格
                             Button btn_intoshop=(Button) view.findViewById(R.id.btn_intoshop);//进入店铺
-                            Button btn_action=(Button) view.findViewById(R.id.btn_action);//评价
-                            text_name.setText(sellername);
+                            final Button btn_action=(Button) view.findViewById(R.id.btn_action);//评价
+                            TextView text_state=(TextView)view.findViewById(R.id.text_state);//订单状态
+                            btn_intoshop.setVisibility(View.GONE);
+                            text_name.setText(userName);
                             text_time.setText(arr[0]);
-                            GetImgByUrl.setUrlImg(img,"http://"+ GlobleValue.get_ip()+"/ChujianServer/images/"+sellerid+"/icon.png",false,0.6);
+                            text_remark.setText(address);
+                            if(state[0]==0)
+                            {
+                                text_state.setText("等待接单");
+                                btn_action.setVisibility(View.VISIBLE);
+                            }
+                            else if(state[0]==1)
+                            {
+                                text_state.setText("等待确认");
+                                btn_action.setVisibility(View.GONE);
+                            }
+                            else if(state[0]==3)
+                            {
+                                text_state.setText("已取消");
+                                btn_action.setVisibility(View.GONE);
+                            }
+                            else
+                            {
+                                text_state.setText("已完成");
+                                //TODO 评价界面完成后，显示评价btn_action.setVisibility(View.GONE);
+                            }
+                           // GetImgByUrl.setUrlImg(img,"http://"+ GlobleValue.get_ip()+"/ChujianServer/images/"+sellerid+"/icon.png",false,0.6);
                             text_price.setText("¥"+price);
                             view.setOnClickListener(new View.OnClickListener() {
                                 @Override
                                 public void onClick(View view) {
-                                    startActivity(new Intent(getActivity(),OrderDetailActivity.class).putExtra("data",jsonObject.toString()));
+                                    startActivity(new Intent(getActivity(),OrderDetailActivity.class).putExtra("data", JSONObject.fromObject(oneOrder).toString()));
                                 }
                             });
+
                             btn_action.setOnClickListener(new View.OnClickListener() {
                                 @Override
                                 public void onClick(View view) {
-                                    startActivity(new Intent(getActivity(),CommentActivity.class).putExtra("data",jsonObject.toString()));
+                                    if(state[0]==0)
+                                        HttpRequestUtil.Send("updateorder", "state=1&&orderid=" + orderid, new HttpSendCallback() {
+                                            @Override
+                                            public void getdata(String data) {
+                                                if(data.equals("111"))
+                                                {
+                                                    state[0]=1;
+                                                    btn_action.setVisibility(View.GONE);
+                                                }
+                                                else
+                                                    Toast.makeText(getActivity(),"接单失败",Toast.LENGTH_SHORT).show();
+                                            }
+                                        });
+                                   // startActivity(new Intent(getActivity(),CommentActivity.class).putExtra("data",JSONObject.fromObject(oneOrder).toString()));
                                 }
                             });
-                            btn_intoshop.setOnClickListener(new View.OnClickListener() {
+                           /* btn_intoshop.setOnClickListener(new View.OnClickListener() {
                                 @Override
                                 public void onClick(View view) {
                                     HttpRequestUtil.Send("getsellerbyid","sellerid="+sellerid,new HttpSendCallback() {
@@ -106,7 +151,8 @@ public class Fragment_order extends Fragment{
                                         }
                                     });
                                 }
-                            });
+                            });*/
+
                             HttpRequestUtil.Send("getorderdetail","orderid="+orderid,new HttpSendCallback() {
                                 @Override
                                 public void getdata(String data) {
@@ -114,29 +160,23 @@ public class Fragment_order extends Fragment{
                                         Toast.makeText(getActivity(),"数据错误",Toast.LENGTH_LONG).show();
                                     else
                                     {
-                                        try {
-                                            JSONArray jsonArray=new JSONArray(data);
-                                            int count=jsonArray.length();
-                                            JSONObject jsonObject=jsonArray.getJSONObject(1);
-                                            String foodname=jsonObject.getString("foodname");
-                                            int foodid=jsonObject.getInt("foodid");
+                                            List<OrderDetail> foodDetail= (List<OrderDetail>) JSONArray.toCollection(JSONArray.fromObject(data),OrderDetail.class);
+                                            int count=foodDetail.size();
+                                             OrderDetail food=foodDetail.get(0);
+                                            String foodname=food.getFoodname();
+                                            int foodid=food.getFoodid();
                                             GetImgByUrl.setUrlImg(img_food,"http://"+GlobleValue.get_ip()+"/ChujianServer/images/"+sellerid+"/"+foodid+".png");
                                             if(count>1)
                                                 text_foodname.setText(foodname+"等"+count+"样");
                                             else
                                                 text_foodname.setText(foodname);
-                                        } catch (JSONException e) {
-                                            e.printStackTrace();
-                                        }
+
 
                                     }
                                 }
                             });
                             contentView.addView(view);
                         }
-                    } catch (JSONException e) {
-                        e.printStackTrace();
-                    }
 
                 }
             }

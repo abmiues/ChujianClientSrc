@@ -57,29 +57,34 @@
                 <category android:name="android.intent.category.LAUNCHER" />
             </intent-filter>
         </activity>
-        <activity android:name=".MainActivity" />
+        <activity android:name=".user.MainActivity" />
         <activity
             android:name=".LoginActivity"
             android:label="@string/title_activity_login"
             android:windowSoftInputMode="adjustPan" />
-        <activity android:name=".SellerDetailActivity" />
-        <activity android:name=".FoodDetailActivity" />
-        <activity android:name=".SearchSellerActivity" />
-        <activity android:name=".SearchCameraActivity" />
-        <activity android:name=".PayForOrderActivity" />
-        <activity android:name=".OrderDetailActivity" />
-        <activity android:name=".RegisterActivity" />
-        <activity android:name=".SetPwdActivity" />
-        <activity android:name=".CommentActivity" />
+        <activity android:name=".user.SellerDetailActivity" />
+        <activity android:name=".user.FoodDetailActivity" />
+        <activity android:name=".user.SearchSellerActivity" />
+        <activity android:name=".user.SearchCameraActivity" />
+        <activity android:name=".user.PayForOrderActivity" />
+        <activity android:name=".user.OrderDetailActivity" />
+        <activity android:name=".user.RegisterActivity" />
+        <activity android:name=".user.SetPwdActivity" />
+        <activity android:name=".user.CommentActivity" />
         <activity
             android:name=".WebUi"
             android:screenOrientation="portrait"
-            android:theme="@style/FullScreen"></activity>
+            android:theme="@style/FullScreen" />
 
         <service
             android:name="com.abmiues.push.PushReciver"
             android:enabled="true"
-            android:exported="true"></service>
+            android:exported="true" />
+
+        <activity android:name=".seller.SellerMainActivity" />
+        <activity android:name=".seller.SellerOrderDetailActivity" />
+        <activity android:name=".seller.SellerCommentActivity" />
+        <activity android:name=".seller.SellerAddCamera"></activity>
     </application>
 
 </manifest>

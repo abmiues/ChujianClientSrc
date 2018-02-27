@@ -1,4 +1,4 @@
-package com.abmiues.chujian;
+package com.abmiues.chujian.user;
 
 import android.app.Fragment;
 import android.content.Intent;
@@ -9,6 +9,8 @@ import android.view.ViewGroup;
 import android.widget.Button;
 
 import com.abmiues.Utils.GlobleValue;
+import com.abmiues.chujian.LoginActivity;
+import com.abmiues.chujian.R;
 
 /**
  * Created by Administrator on 2017/2/20.

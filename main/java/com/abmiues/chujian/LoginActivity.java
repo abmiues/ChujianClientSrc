@@ -32,11 +32,15 @@ import android.widget.EditText;
 import android.widget.TextView;
 
 import com.abmiues.Utils.GlobleValue;
+import com.abmiues.chujian.seller.SellerMainActivity;
+import com.abmiues.chujian.user.MainActivity;
+import com.abmiues.chujian.user.RegisterActivity;
 
 import java.util.ArrayList;
 import java.util.List;
 
 import static android.Manifest.permission.READ_CONTACTS;
+import static com.abmiues.chujian.R.id.btn_setip;
 import static com.abmiues.chujian.R.id.login;
 
 /**
@@ -52,6 +56,7 @@ public class LoginActivity extends AppCompatActivity implements LoaderCallbacks<
     private EditText mPasswordView;
     private View mProgressView;
     private View mLoginFormView;
+    private Button btnChange;
     String email;
 
     @Override
@@ -60,9 +65,11 @@ public class LoginActivity extends AppCompatActivity implements LoaderCallbacks<
         setContentView(R.layout.activity_login);
         // Set up the login form.
         mEmailView = (AutoCompleteTextView) findViewById(R.id.email);
+        mPasswordView = (EditText) findViewById(R.id.password);
+        mLoginFormView = findViewById(R.id.login_form);
+        mProgressView = findViewById(R.id.login_progress);
         populateAutoComplete();
 
-        mPasswordView = (EditText) findViewById(R.id.password);
         mPasswordView.setOnEditorActionListener(new TextView.OnEditorActionListener() {
             @Override
             public boolean onEditorAction(TextView textView, int id, KeyEvent keyEvent) {
@@ -73,70 +80,76 @@ public class LoginActivity extends AppCompatActivity implements LoaderCallbacks<
                 return false;
             }
         });
-        TextView text_register= (TextView) findViewById(R.id.text_register);
-        text_register.setOnClickListener(new OnClickListener() {
+        //定义一个全局的点击事件监听方法
+        OnClickListener myClickListener = new OnClickListener() {
             @Override
-            public void onClick(View view) {
-                startActivity(new Intent(LoginActivity.this,RegisterActivity.class));
-            }
-        });
-        Button btn_setip=(Button) findViewById(R.id.btn_setip);
-        btn_setip.setOnClickListener(new OnClickListener() {
+            public void onClick(View view) {int btnId = view.getId();OnBtnClick(btnId);}
+        };
 
-            @Override
-            public void onClick(View v) {
-                AlertDialog.Builder builder = new AlertDialog.Builder(LoginActivity.this);
-                builder.setIcon(R.drawable.ic_launcher);
-                builder.setTitle("请输入用户名和密码");
-                //    通过LayoutInflater来加载一个xml的布局文件作为一个View对象
-                View view = LayoutInflater.from(LoginActivity.this).inflate(R.layout.setip, null);
-                //    设置我们自己定义的布局文件作为弹出框的Content
-                builder.setView(view);
-
-                final EditText edittextip = (EditText)view.findViewById(R.id.edittextip);
-                final EditText edittexthost = (EditText)view.findViewById(R.id.edittexthost);
-
-                builder.setPositiveButton("确定", new DialogInterface.OnClickListener()
-                {
-                    @Override
-                    public void onClick(DialogInterface dialog, int which)
-                    {
-                        String ip = edittextip.getText().toString().trim();
-                        String b = edittexthost.getText().toString().trim();
-                        int m_host=Integer.valueOf(b);
-                        GlobleValue.get_globleData().edit().putString("ip", ip).commit();
-                        GlobleValue.get_globleData().edit().putInt("host", m_host).commit();
-                        GlobleValue.set_ip(ip);
-                        GlobleValue.set_host(m_host);
-                    }
-                });
-
-                builder.setNegativeButton("取消", new DialogInterface.OnClickListener()
-                {
-                    @Override
-                    public void onClick(DialogInterface dialog, int which)
-                    {
-                    }
-                });
-                builder.show();
-
-
-            }
-        });
+        TextView text_register = (TextView) findViewById(R.id.text_register);
+        Button btn_setip = (Button) findViewById(R.id.btn_setip);
         Button mEmailSignInButton = (Button) findViewById(R.id.email_sign_in_button);
-        mEmailSignInButton.setOnClickListener(new OnClickListener() {
-            @Override
-            public void onClick(View view) {
-                InputMethodManager imm = (InputMethodManager)getSystemService(Context.INPUT_METHOD_SERVICE);
-                imm.hideSoftInputFromWindow(mPasswordView.getWindowToken(),0);
-                attemptLogin();
-            }
-        });
+        btnChange=(Button)findViewById(R.id.btn_change);
 
-        mLoginFormView = findViewById(R.id.login_form);
-        mProgressView = findViewById(R.id.login_progress);
+        btnChange.setOnClickListener(myClickListener);
+        text_register.setOnClickListener(myClickListener);
+        btn_setip.setOnClickListener(myClickListener);
+        mEmailSignInButton.setOnClickListener(myClickListener);
+        btnChange.setText(GlobleValue.get_isUser()?"切换商家":"切换用户");
+
     }
 
+    //统一管理所有按钮点击事件
+    private void OnBtnClick(int btnId)
+    {
+        if(btnId==R.id.text_register)
+            startActivity(new Intent(LoginActivity.this, RegisterActivity.class));
+        else if(btnId==R.id.email_sign_in_button)
+        {
+            InputMethodManager imm = (InputMethodManager) getSystemService(Context.INPUT_METHOD_SERVICE);
+            imm.hideSoftInputFromWindow(mPasswordView.getWindowToken(), 0);
+            attemptLogin();
+        }
+        else if(btnId==R.id.btn_change)
+        {
+            Button btn=(Button)findViewById(btnId);
+            GlobleValue.set_isUser(!GlobleValue.get_isUser());
+            btn.setText(GlobleValue.get_isUser()?"切换商家":"切换用户");
+        }
+        else if(btnId== btn_setip)
+        {
+            AlertDialog.Builder builder = new AlertDialog.Builder(LoginActivity.this);
+            builder.setIcon(R.drawable.ic_launcher);
+            builder.setTitle("请输入用户名和密码");
+            //    通过LayoutInflater来加载一个xml的布局文件作为一个View对象
+            View view = LayoutInflater.from(LoginActivity.this).inflate(R.layout.setip, null);
+            //    设置我们自己定义的布局文件作为弹出框的Content
+            builder.setView(view);
+
+            final EditText edittextip = (EditText) view.findViewById(R.id.edittextip);
+            final EditText edittexthost = (EditText) view.findViewById(R.id.edittexthost);
+
+            builder.setPositiveButton("确定", new DialogInterface.OnClickListener() {
+                @Override
+                public void onClick(DialogInterface dialog, int which) {
+                    String ip = edittextip.getText().toString().trim();
+                    String b = edittexthost.getText().toString().trim();
+                    int m_host = Integer.valueOf(b);
+                    GlobleValue.get_globleData().edit().putString("ip", ip).commit();
+                    GlobleValue.get_globleData().edit().putInt("host", m_host).commit();
+                    GlobleValue.set_ip(ip);
+                    GlobleValue.set_host(m_host);
+                }
+            });
+
+            builder.setNegativeButton("取消", new DialogInterface.OnClickListener() {
+                @Override
+                public void onClick(DialogInterface dialog, int which) {
+                }
+            });
+            builder.show();
+        }
+    }
     private void populateAutoComplete() {
         if (!mayRequestContacts()) {
             return;
@@ -172,7 +185,7 @@ public class LoginActivity extends AppCompatActivity implements LoaderCallbacks<
      */
     @Override
     public void onRequestPermissionsResult(int requestCode,  String[] permissions,
-                                            int[] grantResults) {
+                                           int[] grantResults) {
         if (requestCode == REQUEST_READ_CONTACTS) {
             if (grantResults.length == 1 && grantResults[0] == PackageManager.PERMISSION_GRANTED) {
                 populateAutoComplete();
@@ -198,7 +211,7 @@ public class LoginActivity extends AppCompatActivity implements LoaderCallbacks<
         // Store values at the time of the login attempt.
         email = mEmailView.getText().toString();
         String password = mPasswordView.getText().toString();
-        String params="userid="+email+"&pwd="+password;
+        String params=(GlobleValue.get_isUser()?"userid=":"sellerid=")+email+"&pwd="+password;
         boolean cancel = false;
         View focusView = null;
 
@@ -225,19 +238,22 @@ public class LoginActivity extends AppCompatActivity implements LoaderCallbacks<
         } else {
             showProgress(true);
             inLogin=true;
+            btnChange.setVisibility(View.GONE);
             HttpRequestUtil.Send("login",params,new HttpSendCallback() {
                 @Override
                 public void getdata(String data) {
                     showProgress(false);
                     if (data.equals("111")) {
-                        startActivity(new Intent(LoginActivity.this,MainActivity.class));
+                        startActivity(new Intent(LoginActivity.this,GlobleValue.get_isUser()?MainActivity.class:SellerMainActivity.class));
                         LoginActivity.this.finish();
                         GlobleValue.get_globleData().edit().putString("userid",email).commit();
                         GlobleValue.set_userid(email);
                     } else {
                         mPasswordView.setError(getString(R.string.error_incorrect_password));
                         mPasswordView.requestFocus();
+
                     }
+                    btnChange.setVisibility(View.VISIBLE);
                     inLogin=false;
                 }
             });

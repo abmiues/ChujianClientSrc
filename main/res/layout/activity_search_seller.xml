@@ -4,7 +4,7 @@
     android:id="@+id/activity_search_seller"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
-    tools:context="com.abmiues.chujian.SearchSellerActivity">
+    tools:context="com.abmiues.chujian.user.SearchSellerActivity">
     <FrameLayout
         android:layout_width="match_parent"
         android:layout_height="45dp"

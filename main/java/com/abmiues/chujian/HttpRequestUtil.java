@@ -30,7 +30,7 @@ public class HttpRequestUtil
      */
     public static void Send(String funcName,String params,HttpSendCallback callback)
     {
-        Send(GlobleValue.get_ip(),GlobleValue.get_host(),GlobleValue.get_userFuncHead()+funcName,params,callback);
+        Send(GlobleValue.get_ip(),GlobleValue.get_host(),GlobleValue.getFuncHead()+funcName,params,callback);
     }
 
     /**

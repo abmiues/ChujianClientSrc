@@ -12,13 +12,29 @@ import com.abmiues.push.PushReciver;
  */
 
 public class GlobleValue {
+
+    private static String UserHead="ChujianServer/user/";
+    private static String SellerHead="ChujianServer/seller/";
+
     private static String _ip;
     private static int _host;
     private static SharedPreferences _globleData;
-    private static String _userFuncHead="";
+    private static String _funcHead ="";
     private static String _userid="";
     private static PushReciver _pushReciver;
     private static ServiceConnection _serviceConnection;
+
+
+    public static Boolean get_isUser() {
+        return _isUser;
+    }
+
+    public static void set_isUser(Boolean _isUser) {
+        GlobleValue._isUser = _isUser;
+        _globleData.edit().putBoolean("isUser",_isUser).commit();
+    }
+
+    private static Boolean _isUser;
 
     public static String get_ip() {
         return _ip;
@@ -49,15 +65,8 @@ public class GlobleValue {
      * 获取用户请求的方法头
      * @return
      */
-    public static String get_userFuncHead() {
-        return _userFuncHead;
-    }
-    /**
-     * 设置用户请求的方法头
-     * @return
-     */
-    public static void set_userFuncHead(String _userFuncHead) {
-        GlobleValue._userFuncHead = _userFuncHead;
+    public static String getFuncHead() {
+        return _isUser?UserHead:SellerHead;
     }
 
     public static String get_userid() {

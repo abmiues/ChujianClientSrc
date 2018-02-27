@@ -1,4 +1,4 @@
-package com.abmiues.chujian;
+package com.abmiues.chujian.user;
 
 import android.app.Fragment;
 import android.content.Context;
@@ -15,6 +15,11 @@ import android.widget.TextView;
 import android.widget.Toast;
 
 import com.abmiues.Utils.GlobleValue;
+import com.abmiues.chujian.GetImgByUrl;
+import com.abmiues.chujian.HttpRequestUtil;
+import com.abmiues.chujian.HttpSendCallback;
+import com.abmiues.chujian.R;
+import com.abmiues.chujian.WebUi;
 
 import org.json.JSONArray;
 import org.json.JSONException;

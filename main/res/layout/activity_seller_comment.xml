@@ -1,16 +1,16 @@
 <?xml version="1.0" encoding="utf-8"?>
-<RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
-    xmlns:tools="http://schemas.android.com/tools"
-    android:id="@+id/activity_search_camera"
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    android:id="@+id/activity_search_seller"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
-    tools:context="com.abmiues.chujian.user.SearchCameraActivity">
+    android:orientation="vertical"
+    >
     <FrameLayout
         android:layout_width="match_parent"
         android:layout_height="45dp"
         android:background="#ffffff"
         android:orientation="horizontal"
-        android:id="@+id/frameLayout">
+        android:id="@+id/frameLayout2">
         <ImageButton
             android:background="#00ffffff"
             android:id="@+id/imgbtn_back"
@@ -24,7 +24,7 @@
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:layout_gravity="center"
-            android:text="查找直播"
+            android:text="评价订单"
             android:textSize="24sp"/>
         <ImageButton
             android:background="#00ffffff"
@@ -42,17 +42,41 @@
             android:layout_marginTop="3dp"
             /><!--华丽的分割线-->
     </FrameLayout>
+
     <ScrollView
         android:layout_width="match_parent"
         android:layout_height="match_parent"
-        android:layout_below="@+id/frameLayout"
+        android:layout_alignParentTop="true"
         android:layout_alignParentLeft="true"
-        android:layout_alignParentStart="true"
-        >
+        android:layout_marginBottom="40dp"
+        android:layout_alignParentStart="true">
         <LinearLayout
             android:id="@+id/contentView"
             android:layout_width="match_parent"
             android:layout_height="match_parent"
             android:orientation="vertical" />
     </ScrollView>
-</RelativeLayout>
+    <RelativeLayout
+        android:layout_width="match_parent"
+        android:layout_height="40dp"
+        android:layout_marginTop="-40dp"
+        android:orientation="horizontal"
+        android:paddingLeft="10dp"
+        android:layout_gravity="bottom"
+        android:background="@drawable/bottomboder"
+        >
+
+        <Button
+            android:id="@+id/btn_save"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_centerVertical="true"
+            android:background="@color/main_color"
+            android:textColor="#ffffff"
+            android:text="评价"
+            android:layout_alignParentRight="true"
+            android:layout_alignParentEnd="true" />
+    </RelativeLayout>
+
+</LinearLayout>
+

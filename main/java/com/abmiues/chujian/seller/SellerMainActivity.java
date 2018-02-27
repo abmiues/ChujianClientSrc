@@ -1,4 +1,4 @@
-package com.abmiues.chujian;
+package com.abmiues.chujian.seller;
 
 import android.app.Fragment;
 import android.app.FragmentManager;
@@ -13,15 +13,18 @@ import android.view.View;
 import android.widget.TextView;
 
 import com.abmiues.Utils.GlobleValue;
+import com.abmiues.chujian.R;
+import com.abmiues.chujian.user.Fragment_order;
+import com.abmiues.chujian.user.Fragment_person;
 import com.abmiues.push.PushReciver;
 
 import java.util.HashMap;
 
-public class MainActivity extends AppCompatActivity {
+public class SellerMainActivity extends AppCompatActivity {
     TextView textdata;
     Fragment current_fragment;//保存当前正在显示的界面
-    Fragment fragment_index;
-    Fragment fragment_livevideo;
+    Fragment fragmentStore;
+    FragmentSellerLivevideo fragment_livevideo;
     Fragment fragment_order;
     Fragment fragment_person;
     int current_btn;
@@ -35,12 +38,12 @@ public class MainActivity extends AppCompatActivity {
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
-        setContentView(R.layout.activity_main);
+        setContentView(R.layout.activity_seller_main);
         textdata=(TextView)findViewById(R.id.textdata);
-         btn_index=(TextView)findViewById(R.id.text_index) ;
-         btn_livevideo=(TextView)findViewById(R.id.text_livevideo) ;
-         btn_order=(TextView)findViewById(R.id.text_order) ;
-         btn_person=(TextView)findViewById(R.id.text_person) ;
+        btn_index=(TextView)findViewById(R.id.text_index) ;
+        btn_livevideo=(TextView)findViewById(R.id.text_livevideo) ;
+        btn_order=(TextView)findViewById(R.id.text_order) ;
+        btn_person=(TextView)findViewById(R.id.text_person) ;
         btnlist=new HashMap<Integer,TextView>();
         btnlist.put(0,btn_index);
         btnlist.put(1,btn_livevideo);
@@ -51,7 +54,7 @@ public class MainActivity extends AppCompatActivity {
         bottomClick(btn_livevideo);
         bottomClick(btn_order);
         bottomClick(btn_person);
-        bindService(new Intent(MainActivity.this, PushReciver.class), GlobleValue.get_serviceConnection(), Service.BIND_AUTO_CREATE);//绑定PushService
+        bindService(new Intent(SellerMainActivity.this, PushReciver.class), GlobleValue.get_serviceConnection(), Service.BIND_AUTO_CREATE);//绑定PushService
         //textdata.setText(localdata.getString("camera",""));
 
     }
@@ -65,10 +68,10 @@ public class MainActivity extends AppCompatActivity {
                 switch (view.getId())
                 {
                     case R.id.text_index:
-                        if(fragment_index!=current_fragment)
+                        if(fragmentStore!=current_fragment)
                         {
-                            transaction.hide(current_fragment).show(fragment_index).commit();
-                            current_fragment=fragment_index;
+                            transaction.hide(current_fragment).show(fragmentStore).commit();
+                            current_fragment=fragmentStore;
                             changebtnimg(btnlist.get(current_btn),relase[current_btn]);
                             current_btn=0;
                             changebtnimg(btnlist.get(current_btn),press[current_btn]);
@@ -89,7 +92,7 @@ public class MainActivity extends AppCompatActivity {
                         {
                             if(fragment_order!=null)
                                 transaction.remove(fragment_order);
-                            fragment_order=new Fragment_order();
+                            fragment_order=new FragmentSellerOrder();
                             transaction.add(R.id.fragment_content,fragment_order);
                             transaction.hide(current_fragment).show(fragment_order).commit();
                             current_fragment=fragment_order;
@@ -116,21 +119,21 @@ public class MainActivity extends AppCompatActivity {
     {
         FragmentManager fm=getFragmentManager();
         FragmentTransaction transaction =fm.beginTransaction();
-        fragment_index=new Fragment_index();
+        fragmentStore=new FragmentStroe();
         fragment_person=new Fragment_person();
         fragment_order=new Fragment_order();
-        fragment_livevideo=new Fragment_livevideo();
+        fragment_livevideo=new FragmentSellerLivevideo();
         transaction.add(R.id.fragment_content,fragment_livevideo).hide(fragment_livevideo);
         transaction.add(R.id.fragment_content,fragment_order).hide(fragment_order);
         transaction.add(R.id.fragment_content,fragment_person).hide(fragment_person);
-        transaction.add(R.id.fragment_content,fragment_index).commit();
-        current_fragment=fragment_index;
+        transaction.add(R.id.fragment_content,fragmentStore).commit();
+        current_fragment=fragmentStore;
         current_btn=0;
         changebtnimg(btn_index,R.mipmap.index_orange);
     }
     public void changebtnimg(TextView textView,int resource)
     {
-        Drawable drawable = ContextCompat.getDrawable(MainActivity.this,resource);
+        Drawable drawable = ContextCompat.getDrawable(SellerMainActivity.this,resource);
         drawable.setBounds(0,0,drawable.getMinimumWidth(),drawable.getMinimumHeight());
         textView.setCompoundDrawables(null,drawable,null,null);
     }
@@ -141,6 +144,11 @@ public class MainActivity extends AppCompatActivity {
         super.onDestroy();
         unbindService(GlobleValue.get_serviceConnection());
     }
-
+    @Override
+    protected  void onActivityResult(int requestCode, int resultCode, Intent data)  {
+        if(resultCode==111)//接收到添加摄像头的activity关闭操作,刷新摄像头列表
+            fragment_livevideo.Refresh();
+        super.onActivityResult(requestCode, resultCode,  data);
+    }
 
 }

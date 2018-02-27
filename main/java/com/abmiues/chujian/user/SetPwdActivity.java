@@ -1,4 +1,4 @@
-package com.abmiues.chujian;
+package com.abmiues.chujian.user;
 
 import android.os.Bundle;
 import android.support.v7.app.AppCompatActivity;
@@ -6,6 +6,10 @@ import android.view.View;
 import android.widget.Button;
 import android.widget.EditText;
 import android.widget.Toast;
+
+import com.abmiues.chujian.HttpRequestUtil;
+import com.abmiues.chujian.HttpSendCallback;
+import com.abmiues.chujian.R;
 
 public class SetPwdActivity extends AppCompatActivity {
     EditText edit_pwd;

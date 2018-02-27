@@ -1,4 +1,4 @@
-package com.abmiues.chujian;
+package com.abmiues.chujian.seller;
 
 import android.content.Context;
 import android.os.Bundle;
@@ -16,6 +16,10 @@ import android.widget.TextView;
 import android.widget.Toast;
 
 import com.abmiues.Utils.GlobleValue;
+import com.abmiues.chujian.GetImgByUrl;
+import com.abmiues.chujian.HttpRequestUtil;
+import com.abmiues.chujian.HttpSendCallback;
+import com.abmiues.chujian.R;
 
 import org.json.JSONArray;
 import org.json.JSONException;
@@ -23,7 +27,7 @@ import org.json.JSONObject;
 
 import java.util.HashMap;
 
-public class CommentActivity extends AppCompatActivity {
+public class SellerCommentActivity extends AppCompatActivity {
     LinearLayout contentView;
     HashMap<String ,HashMap> map;
     String sellerid;
@@ -37,7 +41,7 @@ public class CommentActivity extends AppCompatActivity {
         imgbtn_back.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
-                CommentActivity.this.finish();
+                SellerCommentActivity.this.finish();
             }
         });
         Button btn_save= (Button) findViewById(R.id.btn_save);
@@ -66,7 +70,7 @@ public class CommentActivity extends AppCompatActivity {
                         });
                     }
                }
-               CommentActivity.this.finish();
+               SellerCommentActivity.this.finish();
             }
         });
         map=new HashMap<String, HashMap>();
@@ -169,7 +173,7 @@ public class CommentActivity extends AppCompatActivity {
                 @Override
                 public void getdata(String data) {
                     if(data.equals(""))
-                        Toast.makeText(CommentActivity.this,"数据为空",Toast.LENGTH_LONG).show();
+                        Toast.makeText(SellerCommentActivity.this,"数据为空",Toast.LENGTH_LONG).show();
                     else
                     {
                         addfood(data);

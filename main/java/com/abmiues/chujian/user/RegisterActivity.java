@@ -1,4 +1,4 @@
-package com.abmiues.chujian;
+package com.abmiues.chujian.user;
 
 import android.content.Intent;
 import android.os.Bundle;
@@ -7,6 +7,10 @@ import android.view.View;
 import android.widget.Button;
 import android.widget.EditText;
 import android.widget.Toast;
+
+import com.abmiues.chujian.HttpRequestUtil;
+import com.abmiues.chujian.HttpSendCallback;
+import com.abmiues.chujian.R;
 
 public class RegisterActivity extends AppCompatActivity {
     EditText edit_phone;
