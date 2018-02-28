@@ -22,8 +22,8 @@ import com.abmiues.chujian.HttpSendCallback;
 import com.abmiues.chujian.R;
 import com.abmiues.chujian.WebUi;
 import com.abmiues.chujian.pojo.Camera;
-
-import net.sf.json.JSONArray;
+import com.google.gson.Gson;
+import com.google.gson.reflect.TypeToken;
 
 import java.util.List;
 
@@ -80,7 +80,8 @@ public class FragmentSellerLivevideo extends Fragment{
                 if (data.equals(""))
                     Toast.makeText(getActivity(), "数据为空", Toast.LENGTH_LONG).show();
                 else {
-                    List<Camera> cameraList= (List<Camera>) JSONArray.toCollection(JSONArray.fromObject(data),Camera.class);
+                    List<Camera> cameraList =new Gson().fromJson(data,new TypeToken<List<Camera>>(){}.getType());
+                   // List<Camera> cameraList= (List<Camera>) JSONArray.toCollection(JSONArray.fromObject(data),Camera.class);
                     for (int i = 0; i < cameraList.size(); i++) {
                         LayoutInflater inflater = (LayoutInflater) getActivity().getSystemService(Context.LAYOUT_INFLATER_SERVICE);
                         View view = inflater.inflate(R.layout.item_livevideo, null);

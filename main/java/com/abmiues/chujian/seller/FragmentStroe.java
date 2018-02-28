@@ -23,9 +23,8 @@ import com.abmiues.chujian.pojo.Food;
 import com.abmiues.chujian.pojo.S_comment;
 import com.abmiues.chujian.pojo.Seller;
 import com.abmiues.chujian.user.FoodDetailActivity;
-
-import net.sf.json.JSONArray;
-import net.sf.json.JSONObject;
+import com.google.gson.Gson;
+import com.google.gson.reflect.TypeToken;
 
 import java.util.List;
 
@@ -111,7 +110,7 @@ public class FragmentStroe extends Fragment {
         HttpRequestUtil.Send("getuserinfo", "", new HttpSendCallback() {
             @Override
             public void getdata(String data) {
-                sellerInfo= (Seller) JSONObject.toBean(new JSONObject().fromObject(data),Seller.class);
+                sellerInfo= new Gson().fromJson(data,Seller.class);
                 getmenudata();
                 getcommentdata();
             }
@@ -134,7 +133,7 @@ public class FragmentStroe extends Fragment {
         else
         {
             text_nonedata.setVisibility(View.GONE);
-            List<S_comment> commentList= (List<S_comment>) JSONArray.toCollection(JSONArray.fromObject(data),S_comment.class);
+            List<S_comment> commentList =new Gson().fromJson(data,new TypeToken<List<S_comment>>(){}.getType());
             if(commentList.size()==0)
             {
                 text_nonedata.setVisibility(View.VISIBLE);
@@ -197,7 +196,7 @@ public class FragmentStroe extends Fragment {
         else
         {
             text_nonedata.setVisibility(View.GONE);
-            List<Food> menu= (List<Food>) JSONArray.toCollection(JSONArray.fromObject(data),Food.class);
+            List<Food> menu =new Gson().fromJson(data,new TypeToken<List<Food>>(){}.getType());
             if(menu.size()==0)
             {
                 text_nonedata.setVisibility(View.VISIBLE);
@@ -232,7 +231,7 @@ public class FragmentStroe extends Fragment {
                 view.setOnClickListener(new View.OnClickListener() {
                     @Override
                     public void onClick(View view) {
-                        startActivityForResult(new Intent(getActivity(),FoodDetailActivity.class).putExtra("data",food.toString()),0);
+                        startActivityForResult(new Intent(getActivity(),FoodDetailActivity.class).putExtra("data",new Gson().toJson(food)),0);
                     }
                 });
                 contentView.addView(view);

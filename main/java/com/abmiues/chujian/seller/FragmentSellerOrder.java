@@ -22,9 +22,8 @@ import com.abmiues.chujian.R;
 import com.abmiues.chujian.pojo.Order;
 import com.abmiues.chujian.pojo.OrderDetail;
 import com.abmiues.chujian.user.OrderDetailActivity;
-
-import net.sf.json.JSONArray;
-import net.sf.json.JSONObject;
+import com.google.gson.Gson;
+import com.google.gson.reflect.TypeToken;
 
 import java.util.List;
 
@@ -58,7 +57,7 @@ public class FragmentSellerOrder extends Fragment{
                     Toast.makeText(getActivity(),"数据为空",Toast.LENGTH_LONG).show();
                 else
                 {
-                        List<Order> orderList= (List<Order>) JSONArray.toCollection(JSONArray.fromObject(data),Order.class);
+                    List<Order> orderList =new Gson().fromJson(data,new TypeToken<List<Order>>(){}.getType());
                         for (int i=0;i<orderList.size();i++)
                         {
                             LayoutInflater inflater = (LayoutInflater)getActivity().getSystemService( Context.LAYOUT_INFLATER_SERVICE);
@@ -83,7 +82,7 @@ public class FragmentSellerOrder extends Fragment{
                             TextView text_price= (TextView) view.findViewById(R.id.text_price);//价格
                             Button btn_intoshop=(Button) view.findViewById(R.id.btn_intoshop);//进入店铺
                             final Button btn_action=(Button) view.findViewById(R.id.btn_action);//评价
-                            TextView text_state=(TextView)view.findViewById(R.id.text_state);//订单状态
+                            final TextView text_state=(TextView)view.findViewById(R.id.text_state);//订单状态
                             btn_intoshop.setVisibility(View.GONE);
                             text_name.setText(userName);
                             text_time.setText(arr[0]);
@@ -91,6 +90,7 @@ public class FragmentSellerOrder extends Fragment{
                             if(state[0]==0)
                             {
                                 text_state.setText("等待接单");
+                                btn_action.setText("接单");
                                 btn_action.setVisibility(View.VISIBLE);
                             }
                             else if(state[0]==1)
@@ -106,14 +106,15 @@ public class FragmentSellerOrder extends Fragment{
                             else
                             {
                                 text_state.setText("已完成");
-                                //TODO 评价界面完成后，显示评价btn_action.setVisibility(View.GONE);
+                                //TODO 评价界面完成后，显示评价
+                                btn_action.setVisibility(View.GONE);
                             }
                            // GetImgByUrl.setUrlImg(img,"http://"+ GlobleValue.get_ip()+"/ChujianServer/images/"+sellerid+"/icon.png",false,0.6);
                             text_price.setText("¥"+price);
                             view.setOnClickListener(new View.OnClickListener() {
                                 @Override
                                 public void onClick(View view) {
-                                    startActivity(new Intent(getActivity(),OrderDetailActivity.class).putExtra("data", JSONObject.fromObject(oneOrder).toString()));
+                                    startActivity(new Intent(getActivity(),OrderDetailActivity.class).putExtra("data", new Gson().toJson(oneOrder)));
                                 }
                             });
 
@@ -127,6 +128,7 @@ public class FragmentSellerOrder extends Fragment{
                                                 if(data.equals("111"))
                                                 {
                                                     state[0]=1;
+                                                    text_state.setText("等待确认");
                                                     btn_action.setVisibility(View.GONE);
                                                 }
                                                 else
@@ -160,7 +162,7 @@ public class FragmentSellerOrder extends Fragment{
                                         Toast.makeText(getActivity(),"数据错误",Toast.LENGTH_LONG).show();
                                     else
                                     {
-                                            List<OrderDetail> foodDetail= (List<OrderDetail>) JSONArray.toCollection(JSONArray.fromObject(data),OrderDetail.class);
+                                            List<OrderDetail> foodDetail =new Gson().fromJson(data,new TypeToken<List<OrderDetail>>(){}.getType());
                                             int count=foodDetail.size();
                                              OrderDetail food=foodDetail.get(0);
                                             String foodname=food.getFoodname();

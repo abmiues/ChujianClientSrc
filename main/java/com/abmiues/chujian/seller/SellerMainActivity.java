@@ -19,7 +19,6 @@ import com.abmiues.chujian.user.Fragment_person;
 import com.abmiues.push.PushReciver;
 
 import java.util.HashMap;
-
 public class SellerMainActivity extends AppCompatActivity {
     TextView textdata;
     Fragment current_fragment;//保存当前正在显示的界面
@@ -56,7 +55,6 @@ public class SellerMainActivity extends AppCompatActivity {
         bottomClick(btn_person);
         bindService(new Intent(SellerMainActivity.this, PushReciver.class), GlobleValue.get_serviceConnection(), Service.BIND_AUTO_CREATE);//绑定PushService
         //textdata.setText(localdata.getString("camera",""));
-
     }
     public void bottomClick(TextView text)
     {

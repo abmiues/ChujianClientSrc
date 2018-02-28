@@ -18,9 +18,8 @@ import com.abmiues.chujian.HttpSendCallback;
 import com.abmiues.chujian.R;
 import com.abmiues.chujian.pojo.Order;
 import com.abmiues.chujian.pojo.OrderDetail;
-
-import net.sf.json.JSONArray;
-import net.sf.json.JSONObject;
+import com.google.gson.Gson;
+import com.google.gson.reflect.TypeToken;
 
 import java.util.List;
 
@@ -49,7 +48,8 @@ public class SellerOrderDetailActivity extends AppCompatActivity {
                 SellerOrderDetailActivity.this.finish();
             }
         });
-        Order oneOrder= (Order) JSONObject.toBean(JSONObject.fromObject(getIntent().getExtras().getString("data")),Order.class);
+
+        Order oneOrder= new Gson().fromJson(getIntent().getExtras().getString("data"),Order.class);
         String time =oneOrder.getTime();
         sellerid =oneOrder.getSellerid();
         double price = oneOrder.getPrice();
@@ -72,7 +72,7 @@ public class SellerOrderDetailActivity extends AppCompatActivity {
                     Toast.makeText(SellerOrderDetailActivity.this,"数据为空",Toast.LENGTH_LONG).show();
                 else
                 {
-                    List<OrderDetail> foodDetail= (List<OrderDetail>) JSONArray.toCollection(JSONArray.fromObject(data),OrderDetail.class);
+                    List<OrderDetail> foodDetail =new Gson().fromJson(data,new TypeToken<List<OrderDetail>>(){}.getType());
                     for (int i=0;i<foodDetail.size();i++)
                     {
                         OrderDetail food=foodDetail.get(i);

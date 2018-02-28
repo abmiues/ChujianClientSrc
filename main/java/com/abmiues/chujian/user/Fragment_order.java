@@ -81,7 +81,7 @@ public class Fragment_order extends Fragment{
                             TextView text_price= (TextView) view.findViewById(R.id.text_price);//价格
                             Button btn_intoshop=(Button) view.findViewById(R.id.btn_intoshop);//进入店铺
                             final Button btn_action=(Button) view.findViewById(R.id.btn_action);//评价
-                            TextView text_state=(TextView)view.findViewById(R.id.text_state);//订单状态
+                            final TextView text_state=(TextView)view.findViewById(R.id.text_state);//订单状态
                             text_name.setText(sellername);
                             text_time.setText(arr[0]);
 
@@ -123,6 +123,7 @@ public class Fragment_order extends Fragment{
                                            @Override
                                            public void getdata(String data) {
                                                btn_action.setText("评价");
+                                               text_state.setText("已完成");
                                                state[0] =2;
                                            }
                                        });//确认送达

@@ -97,7 +97,7 @@ public class GlobleValue {
                     PushReciver.LocalBinder binder= (PushReciver.LocalBinder) iBinder;
                     PushReciver pushReciver=binder.getService();
                     set_pushReciver(pushReciver);
-                    pushReciver.Connect(get_userid());
+                    pushReciver.Connect(get_userid()+(_isUser?"_u":"_s"));
                 }
 
                 @Override

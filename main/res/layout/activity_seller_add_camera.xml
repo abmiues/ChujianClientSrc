@@ -110,6 +110,7 @@
             android:layout_height="wrap_content"
             android:background="@color/main_color"
             android:text="保存"
+            android:id="@+id/btn_addCamera"
             android:textSize="22sp"
             android:textColor="#ffffff"/>
     </LinearLayout>
