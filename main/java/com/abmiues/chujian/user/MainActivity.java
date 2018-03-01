@@ -3,18 +3,25 @@ package com.abmiues.chujian.user;
 import android.app.Fragment;
 import android.app.FragmentManager;
 import android.app.FragmentTransaction;
+import android.app.NotificationManager;
 import android.app.Service;
+import android.content.Context;
 import android.content.Intent;
 import android.graphics.drawable.Drawable;
 import android.os.Bundle;
 import android.support.v4.content.ContextCompat;
 import android.support.v7.app.AppCompatActivity;
+import android.support.v7.app.NotificationCompat;
 import android.view.View;
 import android.widget.TextView;
 
+import com.abmiues.Utils.EventCenter;
+import com.abmiues.Utils.EventListener;
 import com.abmiues.Utils.GlobleValue;
 import com.abmiues.chujian.R;
+import com.abmiues.chujian.pojo.Order;
 import com.abmiues.push.PushReciver;
+import com.google.gson.Gson;
 
 import java.util.HashMap;
 
@@ -23,7 +30,7 @@ public class MainActivity extends AppCompatActivity {
     Fragment current_fragment;//保存当前正在显示的界面
     Fragment fragment_index;
     Fragment fragment_livevideo;
-    Fragment fragment_order;
+    Fragment_order fragment_order;
     Fragment fragment_person;
     int current_btn;
     TextView btn_index;
@@ -52,6 +59,7 @@ public class MainActivity extends AppCompatActivity {
         bottomClick(btn_livevideo);
         bottomClick(btn_order);
         bottomClick(btn_person);
+        EventCenter.Instace().OrderStateChange.addListener(orderStateChange);
         bindService(new Intent(MainActivity.this, PushReciver.class), GlobleValue.get_serviceConnection(), Service.BIND_AUTO_CREATE);//绑定PushService
         //textdata.setText(localdata.getString("camera",""));
 
@@ -143,5 +151,21 @@ public class MainActivity extends AppCompatActivity {
         unbindService(GlobleValue.get_serviceConnection());
     }
 
-
+    EventListener<String> orderStateChange=new EventListener<String>() {
+        @Override
+        public void GetPush(String data) {
+            Order order=new Gson().fromJson(data,Order.class);
+            // Intent jumpIntent=new Intent(MainActivity.this, OrderDetail.class);
+            // PendingIntent pendingIntent=PendingIntent.getActivity(SellerMainActivity.this,0,jumpIntent,PendingIntent.FLAG_UPDATE_CURRENT);
+            fragment_order.createOrderlist();
+            NotificationManager notificationManager= (NotificationManager) getSystemService(Context.NOTIFICATION_SERVICE);
+            NotificationCompat.Builder builder=new NotificationCompat.Builder(MainActivity.this);
+            builder.setSmallIcon(R.mipmap.logo)
+                    .setContentText("商家已结单")
+                    .setContentText(order.getSellername()+"商家已结单")
+                    .setAutoCancel(true);
+            // .setContentIntent(pendingIntent);
+            notificationManager.notify(1,builder.build());
+        }
+    };
 }

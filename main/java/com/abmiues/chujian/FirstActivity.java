@@ -57,6 +57,8 @@ public class FirstActivity extends AppCompatActivity {
         x.postDelayed(new Runnable() {
             @Override
             public void run() {
+
+
                 HttpRequestUtil.Send("autologin","",new HttpSendCallback() {
                     @Override
                     public void getdata(String data) {

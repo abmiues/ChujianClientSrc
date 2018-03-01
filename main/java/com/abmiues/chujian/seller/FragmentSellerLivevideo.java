@@ -74,6 +74,7 @@ public class FragmentSellerLivevideo extends Fragment{
         return view;
     }
     private void drawVideo() {
+        contentView.removeAllViews();
         HttpRequestUtil.Send("getcamera","", new HttpSendCallback() {
             @Override
             public void getdata(String data) {

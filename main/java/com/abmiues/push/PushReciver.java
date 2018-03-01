@@ -7,6 +7,7 @@ import android.os.Handler;
 import android.os.HandlerThread;
 import android.os.IBinder;
 import android.os.Message;
+import android.widget.Toast;
 
 import org.json.JSONException;
 import org.json.JSONObject;
@@ -29,7 +30,15 @@ public class PushReciver extends Service {
             @Override
             public void handleMessage(Message msg) {
                 super.handleMessage(msg);
-                System.out.print("来自推送线程的消息"+msg.toString());
+                try {
+                    JSONObject jsonObject=new JSONObject(msg.obj.toString());
+                    String func= jsonObject.getString("func");
+                    String data=jsonObject.getString("data");
+                    PushHandler.Push(func,data);
+                } catch (JSONException e) {
+                    Toast.makeText(getApplicationContext(),"收到非json数据",Toast.LENGTH_SHORT).show();
+                }
+
             }
         };
         threadHandler=new Handler(thread.getLooper())
@@ -62,7 +71,7 @@ public class PushReciver extends Service {
         threadHandler.sendMessage(sendMsg);
     }
 
-    /*public void Send(String funcName,String data)
+    public void Send(String funcName,String data)
     {
         JSONObject jsonObject = new JSONObject();
         try {
@@ -79,7 +88,7 @@ public class PushReciver extends Service {
         sendMsg.what=1;
         sendMsg.obj=data;
         threadHandler.sendMessage(sendMsg);
-    }*/
+    }
     //--------只能在子线程调用---------
     private void OnSend(String data)
     {

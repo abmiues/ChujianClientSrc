@@ -3,20 +3,26 @@ package com.abmiues.chujian.seller;
 import android.app.Fragment;
 import android.app.FragmentManager;
 import android.app.FragmentTransaction;
+import android.app.NotificationManager;
 import android.app.Service;
+import android.content.Context;
 import android.content.Intent;
 import android.graphics.drawable.Drawable;
 import android.os.Bundle;
 import android.support.v4.content.ContextCompat;
 import android.support.v7.app.AppCompatActivity;
+import android.support.v7.app.NotificationCompat;
 import android.view.View;
 import android.widget.TextView;
 
+import com.abmiues.Utils.EventCenter;
+import com.abmiues.Utils.EventListener;
 import com.abmiues.Utils.GlobleValue;
 import com.abmiues.chujian.R;
-import com.abmiues.chujian.user.Fragment_order;
+import com.abmiues.chujian.pojo.Order;
 import com.abmiues.chujian.user.Fragment_person;
 import com.abmiues.push.PushReciver;
+import com.google.gson.Gson;
 
 import java.util.HashMap;
 public class SellerMainActivity extends AppCompatActivity {
@@ -24,7 +30,7 @@ public class SellerMainActivity extends AppCompatActivity {
     Fragment current_fragment;//保存当前正在显示的界面
     Fragment fragmentStore;
     FragmentSellerLivevideo fragment_livevideo;
-    Fragment fragment_order;
+    FragmentSellerOrder fragment_order;
     Fragment fragment_person;
     int current_btn;
     TextView btn_index;
@@ -53,6 +59,7 @@ public class SellerMainActivity extends AppCompatActivity {
         bottomClick(btn_livevideo);
         bottomClick(btn_order);
         bottomClick(btn_person);
+        EventCenter.Instace().OrderStateChange.addListener(orderStateChange);
         bindService(new Intent(SellerMainActivity.this, PushReciver.class), GlobleValue.get_serviceConnection(), Service.BIND_AUTO_CREATE);//绑定PushService
         //textdata.setText(localdata.getString("camera",""));
     }
@@ -119,7 +126,7 @@ public class SellerMainActivity extends AppCompatActivity {
         FragmentTransaction transaction =fm.beginTransaction();
         fragmentStore=new FragmentStroe();
         fragment_person=new Fragment_person();
-        fragment_order=new Fragment_order();
+        fragment_order=new FragmentSellerOrder();
         fragment_livevideo=new FragmentSellerLivevideo();
         transaction.add(R.id.fragment_content,fragment_livevideo).hide(fragment_livevideo);
         transaction.add(R.id.fragment_content,fragment_order).hide(fragment_order);
@@ -148,5 +155,23 @@ public class SellerMainActivity extends AppCompatActivity {
             fragment_livevideo.Refresh();
         super.onActivityResult(requestCode, resultCode,  data);
     }
+
+    EventListener<String> orderStateChange=new EventListener<String>() {
+        @Override
+        public void GetPush(String data) {
+            Order order=new Gson().fromJson(data,Order.class);
+            // Intent jumpIntent=new Intent(SellerMainActivity.this, OrderDetail.class);
+            // PendingIntent pendingIntent=PendingIntent.getActivity(SellerMainActivity.this,0,jumpIntent,PendingIntent.FLAG_UPDATE_CURRENT);
+            fragment_order.createOrderlist();
+            NotificationManager notificationManager= (NotificationManager) getSystemService(Context.NOTIFICATION_SERVICE);
+            NotificationCompat.Builder builder=new NotificationCompat.Builder(SellerMainActivity.this);
+            builder.setSmallIcon(R.mipmap.logo)
+                    .setContentText("订单已确认")
+                    .setContentText(order.getUsername()+"用户已确认订单")
+                    .setAutoCancel(true);
+            // .setContentIntent(pendingIntent);
+            notificationManager.notify(1,builder.build());
+        }
+    };
 
 }
