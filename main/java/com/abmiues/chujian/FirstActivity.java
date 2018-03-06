@@ -32,9 +32,8 @@ public class FirstActivity extends AppCompatActivity {
             host = localdata.getInt("host", 0);
         } else//如果是空，表示第一次启动
         {
-            ip = "101.132.150.53";
+            ip="192.168.1.101";
             host = 80;
-            //ip="192.168.1.101";
             //ip="172.20.10.5";
             localdata.edit().putString("ip", ip).commit();
             localdata.edit().putInt("host", host).commit();

@@ -16,8 +16,8 @@ import android.view.View;
 import android.widget.TextView;
 
 import com.abmiues.Utils.EventCenter;
-import com.abmiues.Utils.EventListener;
 import com.abmiues.Utils.GlobleValue;
+import com.abmiues.Utils.MyEventListener;
 import com.abmiues.chujian.R;
 import com.abmiues.chujian.pojo.Order;
 import com.abmiues.push.PushReciver;
@@ -151,7 +151,7 @@ public class MainActivity extends AppCompatActivity {
         unbindService(GlobleValue.get_serviceConnection());
     }
 
-    EventListener<String> orderStateChange=new EventListener<String>() {
+    MyEventListener<String> orderStateChange=new MyEventListener<String>() {
         @Override
         public void GetPush(String data) {
             Order order=new Gson().fromJson(data,Order.class);

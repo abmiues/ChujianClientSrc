@@ -1,6 +1,7 @@
 package com.abmiues.Utils;
 
 import java.util.Collection;
+import java.util.EventListener;
 import java.util.HashSet;
 import java.util.Iterator;
 
@@ -29,11 +30,11 @@ public class EventCenter {
             listeners=new HashSet();
         }
 
-        public void addListener(EventListener listener)
+        public void addListener(MyEventListener listener)
         {
             listeners.add(listener);
         }
-        public void removeListener(EventListener listener)
+        public void removeListener(MyEventListener listener)
         {
             listeners.remove(listener);
         }
@@ -41,7 +42,7 @@ public class EventCenter {
         {
             Iterator iter = listeners.iterator();
             while (iter.hasNext()) {
-                EventListener listener = (EventListener) iter.next();
+                MyEventListener listener = (MyEventListener) iter.next();
                 listener.GetPush(data);
             }
         }
